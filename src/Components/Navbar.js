@@ -19,6 +19,7 @@ function Navbar() {
   };
     return (
         <div>
+	
         <header className="header">
 					<div className="toggle-btns">
 						<a id="toggle-sidebar" href="#">
