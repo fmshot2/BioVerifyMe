@@ -5,7 +5,8 @@ import http from "../http-common";
 
 
 const getAll = () => {
-  return http.get("/about");
+  console.log('ddd');
+  return http.get("/abouts");
 };
 
 const get = id => {

@@ -22,7 +22,7 @@ function Sidebar() {
 						<img src="img/user2.png" className="profile-thumb" alt="User Thumb"></img>
 						<span className="status-label"></span>
 					</div>
-					<h6 className="profile-name mt-5">Yuki Hayashi</h6>
+					<h6 className="profile-name mt-5 text-black">Yuki Hayashi</h6>
 					<div className="profile-actions">
 						<a href="account-settings.html" data-toggle="tooltip" data-placement="top" title="" data-original-title="Settings">
 							<i className="icon-settings1"></i>
