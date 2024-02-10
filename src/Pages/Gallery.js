@@ -1,33 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import GalleryDataService from "../Services/GalleryService";
 import AuthService from "../Services/Auth/auth.service";
+import swal from 'sweetalert';
 
 
-function Gallery () {
+function Gallery() {
   let navigate = useNavigate();
 
-    const [loading, setLoading] = useState(true);
-    const [gallery, setGallery] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [galleries, setGallery] = useState([]);
 
-    useEffect(() => {
-      const user = AuthService.getCurrentUser();
+  useEffect(() => {
+    const user = AuthService.getCurrentUser();
 
-      if (user) {
-          retrieveGallery();
-      } else {
-          navigate("/login");
+    if (user) {
+      retrieveGallery();
+    } else {
+      navigate("/login");
 
-      }
+    }
 
   }, []);
 
   const retrieveGallery = () => {
     GalleryDataService.getAll()
       .then(response => {
-       console.log("gallery", response);
-        setGallery(response.data);
-
+        console.log("gallery", response);
+        process.env.REACT_APP_API_SOURCE === 'laravel' ? setGallery(response.data) : setGallery(response.data.data);
         setLoading(false);
         console.log("about", response.data);
       })
@@ -36,68 +36,88 @@ function Gallery () {
       });
   };
 
+  const deleteGallery = (e, id) => {
+    e.preventDefault();
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this imaginary file!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          GalleryDataService.remove(id)
+            .then(response => {
+              console.log("delete", response.data);
+              swal("Poof! Your imaginary file has been deleted!", {
+                icon: "success",
+              });
+              setGallery(galleries.filter((gallery) => gallery.id !== id))
+            });
+        }
+        else {
+          swal("Your imaginary file is safe!");
+        }
+      })
+  };
+  if (loading) {
+    return <h4>Loading Events...</h4>
+  }
+  else
     return (
-        <div className="table-responsive scrollbar" style={{marginLeft:"200px",}}>
-    <table className="table container">
-      <thead>
-        <tr>          
-          <th scope="col">Email</th>          
-          <th scope="col">Name</th>
-          <th scope="col">Date</th>
-          <th scope="col">Position</th>
-          <th scope="col" className="text-end" >Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>ricky@example.com</td>
-          <td>Ricky Antony</td>
-          <td>22-10-2020</td>
-          <td>supervisor</td>
-          <td className="text-end">
-            <div><button className="btn p-0" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
-              <span className="text-500 fas fa-edit"></span></button><button className="btn p-0 ms-2" type="button" 
-              data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><span className="text-500 fas fa-trash-alt"></span></button></div>
-          </td>
-        </tr>
-        <tr>
-          <td>emma@example.com</td>
-          <td>Emma Watson</td>
-          <td>22-10-2020</td>
-          <td>cleaner</td>
-          <td className="text-end">
-            <div><button className="btn p-0" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"><span className="text-500 fas fa-edit"></span></button><button className="btn p-0 ms-2" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><span className="text-500 fas fa-trash-alt"></span></button></div>
-          </td>
-        </tr>
-        <tr>
-          <td>rown@example.com</td>
-          <td>Rowen Atkinson</td>
-          <td>6-10-2022</td>
-          <td>Teacher</td>
-          <td className="text-end">
-            <div><button className="btn p-0" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"><span className="text-500 fas fa-edit"></span></button><button className="btn p-0 ms-2" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><span className="text-500 fas fa-trash-alt"></span></button></div>
-          </td>
-        </tr>
-        <tr>
-          <td>antony@example.com</td>
-          <td>Antony Hopkins</td>
-          <td>6-10-2022</td>
-          <td>Instructor</td>
-          <td className="text-end">
-            <div><button className="btn p-0" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"><span className="text-500 fas fa-edit"></span></button><button className="btn p-0 ms-2" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><span className="text-500 fas fa-trash-alt"></span></button></div>
-          </td>
-        </tr>
-        <tr>
-          <td>antony@example.com</td>
-          <td>Jennifer Schramm</td>
-          <td>16-10-2022</td>
-          <td>Junior Instructor</td>
-          <td className="text-end">
-            <div><button className="btn p-0" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"><span className="text-500 fas fa-edit"></span></button><button className="btn p-0 ms-2" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><span className="text-500 fas fa-trash-alt"></span></button></div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>            );
+
+      <div>
+        <div className="row">
+          <Link to={'/addevents'} className="btn btn-primary btn-sm float-end"> Add  EVENTS</Link>
+        </div>
+
+
+        <div class="row gutters">
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="card border-warning">
+              <div class="card-header bg-warning">Gallery</div>
+              <div class="card-body text-primary">
+                <h5 class="card-title">Gallery Table</h5>
+                <div class="table-responsive">
+                  <table class="table table-bordered table-stripped m-0 text-center">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Details</th>
+                        <th>Image</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {galleries.map((gallery, index) => (
+
+                        <tr key={index}>
+                          <td>{gallery.id ? gallery.id : gallery._id}</td>
+                          <td>{gallery.title}</td>
+                          <td>{gallery.details}</td>
+                          <td>
+                             <img width="32" height="32" src={`${process.env.REACT_APP_API_BaseURL}/uploads/${gallery.images[0].name}`}>
+                          </img>
+                           </td>
+                          <td>
+                            <div className="text-center">
+                              <Link to={`/editgallery/${gallery._id}`}><span class="icon-pencil"></span></Link>
+                              <span onClick={(e) => deleteGallery(e, gallery.id)} class="icon-trash-2"></span>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    );
 }
 export default Gallery;

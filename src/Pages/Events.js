@@ -19,7 +19,7 @@ function Events() {
     useEffect(() => {
         const user = AuthService.getCurrentUser();
 
-        if (user) {
+        if (!user) {
             retrieveEvents();
         } else {
             navigate("/login");
@@ -28,43 +28,52 @@ function Events() {
 
     }, []);
 
-    const retrieveEvents = () => { 
+    // const updateApiResponse = async (response) => {
+    //     process.env.REACT_APP_API_SOURCE === 'laravel' ?  setEvents(response.data) : getApiResponse(response) ;
+    //     // process.env.REACT_APP_API_SOURCE !== 'laravel' ??  setEvents(previousState => {
+    //     //     return { ...previousState, _id : response.data.data._id}
+    //     //   });
+    // }
+
+    const retrieveEvents = () => {
         EventsDataService.getAll()
             .then(response => {
                 console.log("events", response);
-                setEvents(response.data.data)
+                process.env.REACT_APP_API_SOURCE === 'laravel' ? setEvents(response.data) : setEvents(response.data.data);
+                // updateApiResponse(response)
+                console.log("events2", response);
                 setLoading(false);
             })
             .catch(e => {
                 console.log(e);
             });
-       
+
     };
 
     const deleteEvent = (e, id) => {
-        e.preventDefault(); 
+        e.preventDefault();
         swal({
             title: "Are you sure?",
             text: "Once deleted, you will not be able to recover this imaginary file!",
             icon: "warning",
             buttons: true,
             dangerMode: true,
-          })
-          .then((willDelete) => {
-            if (willDelete) {
-                EventsDataService.remove(id)
-                .then(response => {
-                    console.log("delete", response.data);
-                         swal("Poof! Your imaginary file has been deleted!", {
-                        icon: "success",
-                      });
-                    setEvents(events.filter((event) => event.id !== id)) 
-                });
-            }
-             else  {
-              swal("Your imaginary file is safe!");
-            }
-     }) 
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    EventsDataService.remove(id)
+                        .then(response => {
+                            console.log("delete", response.data);
+                            swal("Poof! Your imaginary file has been deleted!", {
+                                icon: "success",
+                            });
+                            setEvents(events.filter((event) => event.id !== id))
+                        });
+                }
+                else {
+                    swal("Your imaginary file is safe!");
+                }
+            })
     };
 
 
@@ -82,10 +91,10 @@ function Events() {
 
                 <div class="row gutters">
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                    <div class="card border-warning">
-        <div class="card-header bg-warning">Events</div>
-          <div class="card-body text-primary">
-          <h5 class="card-title">Events Table</h5>
+                        <div class="card border-warning">
+                            <div class="card-header bg-warning">Events</div>
+                            <div class="card-body text-primary">
+                                <h5 class="card-title">Events Table</h5>
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-stripped m-0 text-center">
                                         <thead>
@@ -104,7 +113,7 @@ function Events() {
                                             {events.map((event, index) => (
 
                                                 <tr key={index}>
-                                                    <td>{event.id}</td>
+                                                    <td>{event.id ? event.id : event._id}</td>
                                                     <td>{event.title}</td>
                                                     <td>{event.details}</td>
                                                     <td>{event.date}</td>
@@ -113,7 +122,7 @@ function Events() {
                                                     <td>{event.time_end}</td>
                                                     <td>
                                                         <div className="text-center">
-                                                            <Link to={`/editevent/${event.id}`}><span class="icon-pencil"></span></Link>
+                                                            <Link to={`/editevent/${event._id}`}><span class="icon-pencil"></span></Link>
                                                             <span onClick={(e) => deleteEvent(e, event.id)} class="icon-trash-2"></span>
                                                         </div>
                                                     </td>

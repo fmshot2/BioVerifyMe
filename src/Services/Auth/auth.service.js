@@ -6,7 +6,7 @@ const register = (name, email, password) => {
   // To use const API_URL above
 
   // return axios.post(API_URL + "register", {
-    return http.post("/register", {
+    return http.post("/auth/register", {
 
     name,
     email,
@@ -27,7 +27,7 @@ const login = (email, password) => {
   // return axios
     // .post(API_URL + "login", {
   return http
-      .post("/login", {
+      .post("/auth/login", {
       email,
       password,
     })

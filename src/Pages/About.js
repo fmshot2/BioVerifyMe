@@ -9,11 +9,14 @@ import AuthService from "../Services/Auth/auth.service";
 function About() {
   let navigate = useNavigate();
 
+  let idKey = process.env.REACT_APP_API_SOURCE === 'laravel' ? "id" : "_id";
+
     const initialAboutState = {
-    id: null,
+      // id: null,
     title: "",
     details: "",
   };
+  initialAboutState[idKey] = null;
 
     const [loading, setLoading] = useState(true);
     const [about, setAbout] = useState(initialAboutState);
@@ -22,25 +25,19 @@ function About() {
 
     useEffect(() => {
       const user = AuthService.getCurrentUser();
-      if (user) {
+      if (!user) {
         navigate("/login");
       } else {
-        retrieveAbout(); 
-
+        retrieveAbout();
       }
-      // retrieveAbout(); 
-
 
   }, []);
 
     const retrieveAbout = () => {
     AboutDataService.getAll()
       .then(response => {
-       console.log("tutossssr", response);
-        setAbout(response.data);
-
+        process.env.REACT_APP_API_SOURCE === 'laravel' ?  setAbout(response.data) : setAbout(response.data.data[0]);
         setLoading(false);
-        console.log("about", response.data);
       })
       .catch(e => {
         console.log(e);
@@ -54,7 +51,7 @@ function About() {
 
   const updateAbout = (e) => {
     e.preventDefault();
-    AboutDataService.update(about.id, about)
+    AboutDataService.update(about.id ? about.id : about._id, about)
       .then(response => {
         console.log( "about", response.data);
         setMessage(" About Status was updated successfully!");
@@ -68,20 +65,20 @@ function About() {
 
  };
 
+// Function is temporarily disabled
 
-const deleteAbout = (e, id) => {
-  e.preventDefault();
-    AboutDataService.remove(about.id)
-      .then(response => {
-        console.log(response.data);
-        setMessage(" About Status was deleted successfully!");
-        navigate("/addabout");
-        // props.history.push("/tutorials");
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  };
+// const deleteAbout = (e, id) => {
+//   e.preventDefault();
+//     AboutDataService.remove(about.id ? about.id : about._id)
+//       .then(response => {
+//         console.log(response.data);
+//         setMessage(" About Status was deleted successfully!");
+//         navigate("/addabout");
+//       })
+//       .catch(e => {
+//         console.log(e);
+//       });
+//   };
 
 
   const newAbout = () => {
@@ -113,7 +110,7 @@ else
                         <input type="text" className="form-control" id="inputid"
                           placeholder="Enter id" 
                           name="title" onChange={handleInputChange}
-                          value={about.id}></input>
+                          value={about.id ? about.id : about._id}></input>
                       </div>
                     </div>
                     <div className="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
@@ -151,12 +148,12 @@ else
                <p>{message}</p>
            </div>
            <div>
-           <Button
+           {/* <Button
               size='btn-sm'
               textcolor='red'
               color='btn-info'
                text="Delete About"
-               onClick={(e)=>deleteAbout(e, about.id)} />
+               onClick={(e)=>deleteAbout(e, about.id ? about.id : about._id)} /> */}
                
            </div>
            </div>

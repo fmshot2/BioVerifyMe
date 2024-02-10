@@ -50,10 +50,10 @@ useEffect(() => {
     ConfigDataService.getAll()
       .then(response => {
        console.log("config", response);
-        setConfig(response.data);
+        setConfig(response.data.data[0]);
         setLoading(false);
 
-        console.log("configg", response.data);
+        // console.log("configg", response.data);
       })
       .catch(e => {
         console.log(e);
@@ -67,7 +67,7 @@ useEffect(() => {
 
   const updateConfig = (e) => {
     e.preventDefault();
-    ConfigDataService.update(config.id, config)
+    ConfigDataService.update(config.id ? config.id : config._id, config)
       .then(response => {
         console.log( "config", response.data);
         setMessage(" Config Status was updated successfully!");
@@ -80,20 +80,20 @@ useEffect(() => {
       
  };
 
- const deleteConfig = (e, id) => {
-  e.preventDefault();
-    ConfigDataService.remove(config.id)
-      .then(response => {
-        console.log(response.data);
-        setMessage(" Config Status was deleted successfully!");
-        navigate("/addconfig");
-        // props.history.push("/tutorials");
-      })
-      .catch(e => {
+//  const deleteConfig = (e, id) => {
+//   e.preventDefault();
+//     ConfigDataService.remove(config.id ? config.id : config._id)
+//       .then(response => {
+//         console.log(response.data);
+//         setMessage(" Config Status was deleted successfully!");
+//         navigate("/addconfig");
+//         // props.history.push("/tutorials");
+//       })
+//       .catch(e => {
 
-        console.log(e);
-      });
-  };
+//         console.log(e);
+//       });
+//   };
 
   
 
@@ -238,12 +238,12 @@ return (
          <p>{message}</p>
      </div>
      <div>
-     <Button
+     {/* <Button
               size='btn-sm'
               textcolor='white'
               color='btn-info'
                text="Delete"
-               onClick={(e)=>deleteConfig(e, config.id)} />
+               onClick={(e)=>deleteConfig(e, config.id ? config.id : config._id)} /> */}
      </div>
      </div>
 

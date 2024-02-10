@@ -7,7 +7,8 @@ import {BrowserRouter as Router,  Routes, Route } from 'react-router-dom';
 import Users from './Pages/Users'
 import About from './Pages/About' 
 import Config from './Pages/Config'
-import Gallery from './Pages/Gallery' 
+import Gallery from './Pages/Gallery'
+import EditGallery from './Pages/EditGallery'
 import Partners from './Pages/Partners' 
 import PreviousEvents from './Pages/PreviousEvents'
 import Services from './Pages/Services' 
@@ -79,6 +80,7 @@ function App() {
         <Route exact path="/speakers" element={<Speakers />} />
         <Route path="/config" element={<Config />} />
         <Route exact path="/gallery" element={<Gallery />} /> 
+        <Route  path="/editgallery/:id" element={<EditGallery />} /> 
         <Route exact path="/partners" element={<Partners />} /> 
         <Route exact path="/previousevents" element={<PreviousEvents />} />
         <Route exact path="/services" element={<Services />} /> 

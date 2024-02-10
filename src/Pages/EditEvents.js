@@ -27,9 +27,11 @@ function EditEvents() {
   const getEventDetails = id => {
     EventsDataService.get(id)
       .then(response => {
-        console.log("eventD", response);
-        setCurrentEvent(response.data.data);
-        setItems(response.data.data.items);
+        console.log("eventDppp", response);
+        process.env.REACT_APP_API_SOURCE === 'laravel' ? setCurrentEvent(response.data) : setCurrentEvent(response.data.data);
+        // process.env.REACT_APP_API_SOURCE === 'laravel' ? setItems(response.data.data.items) : setItems(response.data.data.eventitems);
+        setItems(response.data.data.eventitems);
+        
         console.log("eventD3", response.data.data);
       })
       .catch(e => {

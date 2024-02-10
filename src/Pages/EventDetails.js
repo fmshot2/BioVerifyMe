@@ -17,7 +17,7 @@ function EventDetails() {
   };
 
 
-  const [currenteventdetails, setCurrentEventDetails] = useState(initialeventDetailsState);
+  const [currenteventdetails, setCurrentEventDetails] = useState({});
   const [message, setMessage] = useState("");
 
 
@@ -56,13 +56,13 @@ useEffect(() => {
             </thead>
             <tbody>
               <tr>
-              <td>{currenteventdetails.id}</td>
+              {/* <td>{currenteventdetails._id}</td>
                 <td>{currenteventdetails.details}</td>
                 <td className="text-end">
                   <div><button className="btn p-0" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
                     <span className="text-500 fas fa-edit"></span></button><button className="btn p-0 ms-2" type="button" 
                     data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><span className="text-500 fas fa-trash-alt"></span></button></div>
-                </td>
+                </td> */}
               </tr>
               
             </tbody>

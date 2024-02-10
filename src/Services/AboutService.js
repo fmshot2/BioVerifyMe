@@ -5,7 +5,6 @@ import http from "../http-common";
 
 
 const getAll = () => {
-  console.log('ddd');
   return http.get("/abouts");
 };
 
@@ -18,11 +17,11 @@ const create = data => {
 };
 
 const update = (id, data) => {
-  return http.put(`/about/${id}`, data);
+  return http.put(`/abouts/${id}`, data);
 };
 
 const remove = id => {
-  return http.delete(`/about/${id}`);
+  return http.delete(`/abouts/${id}`);
 };
 
 const removeAll = () => {

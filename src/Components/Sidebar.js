@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
 
-
+const divStyle = {
+	"overflow-y" : "auto",  
+  };
 function Sidebar() {
-    return (
-        <div>
-			<nav id="sidebar" className="sidebar-wrapper">
+	return (
+		<div>
+			<nav id="sidebar" className="sidebar-wrapper"  style={divStyle}>
 
 				{/*-- Sidebar brand start  */}
 
 				<div className="sidebar-brand">
 					<a href="index.html" className="logo">
 						<img src="img/logo.png" alt="Logo" ></img>
-					</a> 
+					</a>
 					<a href="index.html" className="logo">Tycöòn</a>
 				</div>
 				{/*-- Sidebar brand end  */}
-				
+
 				{/*-- User profile start */}
 				<div className="sidebar-user-details">
 					<div className="user-profile">
@@ -33,7 +35,7 @@ function Sidebar() {
 						<a href="login.html" className="red" data-toggle="tooltip" data-placement="top" title="" data-original-title="Logout">
 							<i className="icon-power1"></i>
 						</a>
-					</div>					
+					</div>
 				</div>
 				{/*-- User profile end */}
 
@@ -51,17 +53,14 @@ function Sidebar() {
 								<div className="sidebar-submenu">
 									<ul>
 										<li>
-											<a href="/events" className="current-page">EVENTS</a>
-										</li>
-										<li>
-											<a href="/about">ABOUT</a>
+											<a to={'/about'}>ABOUT</a>
 										</li>
 										<li>
 											<a href="/config">CONFIG</a>
 										</li>
 										<li>
 											<a href="/gallery">GALLERY</a>
-										</li>		
+										</li>
 									</ul>
 								</div>
 							</li>
@@ -106,6 +105,9 @@ function Sidebar() {
 									<i className="icon-line-graph"></i>
 									<span className="menu-text">PARTNERS</span>
 								</a>
+							</li>
+							<li>
+								<a href="/events" className="current-page">EVENTS</a>
 							</li>
 							<li className="sidebar-dropdown">
 								<a href="/previousevents">
@@ -184,7 +186,7 @@ function Sidebar() {
 									<ul>
 										<li>
 											<a href="account-settings.html">Account Settings</a>
-										</li>										
+										</li>
 										<li>
 											<a href="faq.html">Faq</a>
 										</li>
@@ -199,7 +201,7 @@ function Sidebar() {
 										</li>
 										<li>
 											<a href="search-results.html">Search Results</a>
-										</li>	
+										</li>
 										<li>
 											<a href="timeline.html">Timeline</a>
 										</li>
@@ -208,7 +210,7 @@ function Sidebar() {
 										</li>
 									</ul>
 								</div>
-							</li>		
+							</li>
 							<li className="sidebar-dropdown">
 								<a href="#">
 									<i className="icon-edit1"></i>
@@ -301,7 +303,7 @@ function Sidebar() {
 										</li>
 										<li>
 											<a href="icons.html">Icons</a>
-										</li>	
+										</li>
 										<li>
 											<a href="jumbotron.html">Jumbotron</a>
 										</li>
@@ -325,7 +327,7 @@ function Sidebar() {
 										</li>
 										<li>
 											<a href="typography.html">Typography</a>
-										</li>					
+										</li>
 										<li>
 											<a href="images.html">Thumbnails</a>
 										</li>
@@ -422,11 +424,11 @@ function Sidebar() {
 
 				</div>
 				{/*-- Sidebar content end */}
-				
+
 			</nav>
 			{/*-- Sidebar wrapper end */}
-</div>
+		</div>
 
-    )
+	)
 }
 export default Sidebar
