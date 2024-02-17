@@ -16,50 +16,64 @@ function EditGallery() {
   const initialGalleryDetailsState = {
     id: null,
     title: "",
-    image: ""
+    images: [],
+    details: ""
   };
+            // console.log("setting1", currentgallery)
+
   const [currentgallery, setCurrentGallery] = useState(initialGalleryDetailsState);
-  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
-  const [items, setItems] = useState([]);
-  // const [Topics, setTopics] = useState([]);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const getGalleryDetails = id => {
     GalleryDataService.get(id)
       .then(response => {
-        console.log("eventDppp", response);
         process.env.REACT_APP_API_SOURCE === 'laravel' ? setCurrentGallery(response.data) : setCurrentGallery(response.data.data);
-        // process.env.REACT_APP_API_SOURCE === 'laravel' ? setItems(response.data.data.items) : setItems(response.data.data.eventitems);
-        setItems(response.data.data.eventitems);
-        
-        console.log("eventD3", response.data.data);
       })
       .catch(e => {
         console.log(e);
       });
   };
 
-    const handleInputChange = event => {
-    const { name, value } = event.target;
-    setCurrentGallery({ ...currentgallery, [name]: value });
+  const handleInputChange = event => {
+    if (event.target.name === 'file') {     
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.readyState === 2) {
+          setImagePreview(event.target.files[0] )
+          setCurrentGallery((prevState) => {
+            return { ...prevState, images: event.target.files[0] };
+          });
+        }
+      }
+      console.log("imagePreview", imagePreview)
+
+      reader.readAsDataURL(event.target.files[0])
+
+    }
+    if (event.target.name !== 'file') {
+      setCurrentGallery((prevState) => {
+        return { ...prevState, [event.target.name]: event.target.value };
+      });
+      console.log("setting", currentgallery)
+    }
   };
 
   useEffect(() => {
     getGalleryDetails(params.id);
+    console.log("hhhh", currentgallery);
   }, [params.id]);
-  
+
 
   const updateGallery = (e) => {
     e.preventDefault();
+    const formData = new FormData();
+    formData.set('title', currentgallery.title);
+    formData.set('details', currentgallery.details);
+    formData.set('file', currentgallery.images);
 
-    GalleryDataService.update(currentgallery.id, currentgallery)
-    console.log("file", currentgallery)
-
+    GalleryDataService.update(currentgallery.id, formData)
       .then(response => {
-        console.log("events", response.data);
-        setMessage("The event was updated successfully!");
-        console.log("eventss", message);
-
       })
       .catch(e => {
         console.log(e);
@@ -67,32 +81,34 @@ function EditGallery() {
   };
 
 
-  const deleteItems = (e, id) => {
-    e.preventDefault(); 
+  const deleteGallery = (e, id) => {
+    e.preventDefault();
     swal({
-        title: "Are you sure?",
-        text: "Once deleted, you will not be able to recover this imaginary file!",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-      })
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this imaginary file!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
       .then((willDelete) => {
         if (willDelete) {
-            ItemsDataService.remove(id)
+          GalleryDataService.remove(id)
             .then(response => {
-                console.log("delete", response.data.data);
-                     swal("Poof! Your imaginary file has been deleted!", {
-                    icon: "success",
-                  });
-                setItems(items.filter((item) => item.id !== id)) 
+              console.log("delete", response.data.data);
+              swal("Poof! Your imaginary file has been deleted!", {
+                icon: "success",
+              });
+              // setCurrentGallery(items.filter((item) => item.id !== id))
             });
         }
-         else  {
+        else {
           swal("Your imaginary file is safe!");
         }
- }) 
-};
-
+      })
+  };
+ const getColumnWidth = () => {
+  return imagePreview === null ? 4 : 3;
+ }
 
   return (
     <div className="container">
@@ -100,11 +116,11 @@ function EditGallery() {
 
         <div className="card">
           <div className="card-body">
-            <form onSubmit={updateGallery} >
+            <form onSubmit={updateGallery} encType='multipart/form-data'>
 
               <div className="row gutters">
 
-                <div className="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
+              <div className={`col-xl-${getColumnWidth()} col-lg-${getColumnWidth()} col-md-${getColumnWidth()} col-sm-${getColumnWidth()} col-12`}>
                   <div className="form-group">
                     <label htmlFor="inputTitle">TITLE</label>
                     <input type="text" className="form-control" id="inputTitle"
@@ -114,7 +130,7 @@ function EditGallery() {
                   </div>
                 </div>
 
-                <div className="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
+                <div className={`col-xl-${getColumnWidth()} col-lg-${getColumnWidth()} col-md-${getColumnWidth()} col-sm-${getColumnWidth()} col-12`}>
                   <div className="form-group">
                     <label htmlFor="inputDetails">Input DETAILS</label>
                     <input type="text" className="form-control" id="inputDetails"
@@ -125,18 +141,32 @@ function EditGallery() {
                   </div>
                 </div>
 
-                <div className="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
+                <div className={`col-xl-${getColumnWidth()} col-lg-${getColumnWidth()} col-md-${getColumnWidth()} col-sm-${getColumnWidth()} col-12`}>
                   <div className="form-group">
                     <label htmlFor="image">Input Image</label>
-                    <input type="file" accept="image/*" multiple="multiple"  className="form-control" id="image"
+                    <input type="file" accept="image/*" 
+                      multiple="multiple" 
+                      className="form-control" 
+                      id="image"
                       placeholder="Upload Image"
-                      name="file" onChange={handleInputChange}
-                      value={currentgallery.image}>
+                      name="file" 
+                      onChange={handleInputChange}
+                      // value={currentgallery.images[0].name}                    
+                      >
                     </input>
                   </div>
                 </div>
+                <div className={`col-xl-${getColumnWidth()} col-lg-${getColumnWidth()} col-md-${getColumnWidth()} col-sm-${getColumnWidth()} col-12`}>
+                  <div className="form-group">
+                  { imagePreview ?  (
+                    <div>
+                    <label htmlFor="image">Preview</label>
+                  <div><img  width="72" height="50" src={URL.createObjectURL(imagePreview)}></img></div>
+                  </div>) : <p></p>}
+                  </div>
+                </div>
               </div>
-            </form>
+          
             <div className="d-flex justify-content-between">
               <div>
                 <Button
@@ -144,16 +174,17 @@ function EditGallery() {
                   textcolor='white'
                   color='btn-primary'
                   text="Update Gallery"
-                  onClick={updateGallery} />
-                <p>{message}</p>
+                  // onClick={updateGallery}
+                  type="submit" />
+                {/* <p>{message}</p> */}
               </div>
               <div>
-                <Link to="/galleries"
-                  type="submit" className="btn btn-danger "
+                <Link to={"/galleries"}
+                  type="button" className="btn btn-danger "
                 >All Galleries</Link>
               </div>
             </div>
-
+            </form>
           </div>
         </div>
 

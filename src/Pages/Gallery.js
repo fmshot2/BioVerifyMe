@@ -53,7 +53,7 @@ function Gallery() {
               swal("Poof! Your imaginary file has been deleted!", {
                 icon: "success",
               });
-              setGallery(galleries.filter((gallery) => gallery.id !== id))
+              setGallery(galleries.filter((gallery) => gallery._id !== id))
             });
         }
         else {
@@ -104,7 +104,7 @@ function Gallery() {
                           <td>
                             <div className="text-center">
                               <Link to={`/editgallery/${gallery._id}`}><span class="icon-pencil"></span></Link>
-                              <span onClick={(e) => deleteGallery(e, gallery.id)} class="icon-trash-2"></span>
+                              <span onClick={(e) => deleteGallery(e, gallery._id)} class="icon-trash-2"></span>
                             </div>
                           </td>
                         </tr>

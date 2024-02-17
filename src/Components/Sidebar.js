@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const divStyle = {
-	"overflow-y" : "auto",  
-  };
+	"overflow-y": "auto",
+};
 function Sidebar() {
 	return (
 		<div>
-			<nav id="sidebar" className="sidebar-wrapper"  style={divStyle}>
+			<nav id="sidebar" className="sidebar-wrapper" style={divStyle}>
 
 				{/*-- Sidebar brand start  */}
 
@@ -46,68 +47,78 @@ function Sidebar() {
 					<div className="sidebar-menu">
 						<ul>
 							<li className="sidebar-dropdown active">
-								<a href="/">
-									<i className="icon-home2"></i>
-									<span className="menu-text">USERS</span>
-								</a>
-								<div className="sidebar-submenu">
-									<ul>
-										<li>
-											<a to={'/about'}>ABOUT</a>
-										</li>
-										<li>
-											<a href="/config">CONFIG</a>
-										</li>
-										<li>
-											<a href="/gallery">GALLERY</a>
-										</li>
-									</ul>
-								</div>
+								<Link to="/">
+								<i className="icon-unlock"></i>
+									<span className="menu-text">Authentication</span>
+								</Link>								
 							</li>
+										<li>
+											<Link to={'/abouts'}></Link>
+											<i className="icon-circular-graph"></i>
+									<span className="menu-text">About</span>
+										</li>
+										<li>
+											<Link to={"/config"}>CONFIG</Link>
+										</li>
+										<li>
+											<Link to={"/galleries"}>GALLERY</Link>
+										</li>
 							<li>
-								<a href="/contact">
+								<Link to="/contact">
 									<i className="icon-circular-graph"></i>
 									<span className="menu-text">CONTACT</span>
-								</a>
+								</Link>
 							</li>
 							<li>
-								<a href="/upcomingevents">
+								<Link to="/upcomingevents">
 									<i className="icon-circular-graph"></i>
 									<span className="menu-text">UPCOMINGEVENTS</span>
-								</a>
+								</Link>
 							</li>
 							<li>
-								<a href="/services">
+								<Link to="/services">
 									<i className="icon-circular-graph"></i>
 									<span className="menu-text">SERVICES</span>
-								</a>
+								</Link>
 							</li>
 							<li>
-								<a href="/slider">
+								<Link to="/slider">
 									<i className="icon-circular-graph"></i>
 									<span className="menu-text">SLIDER</span>
-								</a>
+								</Link>
 							</li>
 							<li>
-								<a href="/statistics">
+								<Link to="/statistics">
 									<i className="icon-circular-graph"></i>
 									<span className="menu-text">STATISTICS</span>
-								</a>
+								</Link>
 							</li>
 							<li>
-								<a href="/testimonials">
+								<Link to="/testimonials">
 									<i className="icon-circular-graph"></i>
 									<span className="menu-text">TESTIMONIALS</span>
-								</a>
+								</Link>
 							</li>
 							<li>
-								<a href="/partners" className="current-page">
+								<Link to="/partners" className="current-page">
 									<i className="icon-line-graph"></i>
 									<span className="menu-text">PARTNERS</span>
-								</a>
+								</Link>
 							</li>
 							<li>
-								<a href="/events" className="current-page">EVENTS</a>
+								<a href="/services">SERVICES</a>
+							</li>
+							<li>
+								<a href="/slider">SLIDER</a>
+							</li>
+							<li>
+								<a href="/statistics">STATISTICS</a>
+							</li>
+							<li>
+								<a href="/testimonials">TESTIMONIALS</a>
+							</li>
+							<li>
+								<Link to="/events" className="current-page">EVENTS</Link>
 							</li>
 							<li className="sidebar-dropdown">
 								<a href="/previousevents">

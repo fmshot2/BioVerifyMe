@@ -67,7 +67,7 @@ function App() {
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/register" element={<Register />} />
         <Route exact path="/profile" element={<Profile />} />
-        <Route exact path="/" element={<Users />} />
+        {/* <Route exact path="/" element={<Users />} /> */}
         <Route exact path="/users" element={<Users />} />
         <Route exact path="/volunteers" element={<Volunteers />} />
         <Route exact path="/addvolunteer" element={<AddVolunteer />} />
@@ -75,11 +75,12 @@ function App() {
         <Route exact path="/vulcs" element={<Vulcs />} />
         <Route exact path="/addvulc" element={<AddVulc/>} />
         <Route exact path="/editvulc" element={<EditVulc/>} />
-        <Route exact path="/about" element={<About />} />
+        <Route exact path="/" element={<About />} />
+        <Route exact path="/abouts" element={<About />} />
         <Route exact path="/topics" element={<Topics />} />
         <Route exact path="/speakers" element={<Speakers />} />
         <Route path="/config" element={<Config />} />
-        <Route exact path="/gallery" element={<Gallery />} /> 
+        <Route exact path="/galleries" element={<Gallery />} /> 
         <Route  path="/editgallery/:id" element={<EditGallery />} /> 
         <Route exact path="/partners" element={<Partners />} /> 
         <Route exact path="/previousevents" element={<PreviousEvents />} />
