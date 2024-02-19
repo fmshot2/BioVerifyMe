@@ -99,7 +99,7 @@ function Events() {
                                     <table class="table table-bordered table-stripped m-0 text-center">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
+                                                {/* <th>ID</th> */}
                                                 <th>Title</th>
                                                 <th>Details</th>
                                                 <th>Date</th>
@@ -113,7 +113,7 @@ function Events() {
                                             {events.map((event, index) => (
 
                                                 <tr key={index}>
-                                                    <td>{event.id ? event.id : event._id}</td>
+                                                    {/* <td>{event.id ? event.id : event._id}</td> */}
                                                     <td>{event.title}</td>
                                                     <td>{event.details}</td>
                                                     <td>{event.date}</td>
@@ -122,7 +122,8 @@ function Events() {
                                                     <td>{event.time_end}</td>
                                                     <td>
                                                         <div className="text-center">
-                                                            <Link to={`/editevent/${event._id}`}><span class="icon-pencil"></span></Link>
+                                                            {/* <Link to={`/editevent/${event._id}`}><span class="icon-pencil"></span></Link> */}
+                                                            <Link to={`/editevent/${event.id ? event.id : event._id}`}><span class="icon-pencil"></span></Link>
                                                             <span onClick={(e) => deleteEvent(e, event.id)} class="icon-trash-2"></span>
                                                         </div>
                                                     </td>

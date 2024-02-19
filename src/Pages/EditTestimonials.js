@@ -28,7 +28,9 @@ function EditTestimonial() {
     TestimonialsDataService.get(id)
       .then(response => {
         console.log("testimonial", response);
-        setCurrentTestimonial(response.data);
+        process.env.REACT_APP_API_SOURCE === 'laravel' ? setCurrentTestimonial(response.data) : setCurrentTestimonial(response.data.data);      
+
+        // setCurrentTestimonial(response.data);
       
         console.log("testimonials", currenttestimonial);
       })
@@ -51,7 +53,7 @@ function EditTestimonial() {
   const updateTestimonial = (e) => {
     e.preventDefault();
 
-    TestimonialsDataService.update(currenttestimonial.id, currenttestimonial)
+    TestimonialsDataService.update(currenttestimonial.id ? currenttestimonial.id : currenttestimonial._id, currenttestimonial)
       .then(response => {
         console.log( "testimonial", response.data);
         setMessage("The Testimony was updated successfully!");
@@ -81,7 +83,7 @@ function EditTestimonial() {
               <form onSubmit={updateTestimonial} >
 
                 <div className="row gutters">
-                    <div className="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
+                    {/* <div className="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
                       <div className="form-group">
                         <label htmlFor="inputDate">Input ID</label>
                         <input type="id" className="form-control" id="inputId"
@@ -90,7 +92,7 @@ function EditTestimonial() {
                           value={currenttestimonial.id}>
                           </input>
                       </div>
-                    </div>
+                    </div> */}
                     <div className="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
                       <div className="form-group">
                         <label htmlFor="inputTitle">NAME</label>

@@ -14,8 +14,6 @@ function Statistics() {
     const [loading, setLoading] = useState(true);
     const [statistics, setStatistics] = useState([]);
 
-    
-
     useEffect(() => {
         const user = AuthService.getCurrentUser();
         if (user) {
@@ -30,11 +28,12 @@ function Statistics() {
     const retrieveStatistics = () => {
     StatisticsDataService.getAll()
       .then(response => {
-       console.log("tutossssr", response);
-        setStatistics(response.data);
-
+       console.log("StatisticsDataService", response);
+       process.env.REACT_APP_API_SOURCE === 'laravel' ? setStatistics(response.data) : setStatistics(response.data.data);
+    //    process.env.REACT_APP_API_SOURCE === 'laravel' ?     setStatistics({ ...statistics, _id: response.data.data._id })
+    //    currentstatisticId
         setLoading(false);
-        console.log("about", response.data);
+        console.log("failed StatisticsDataService", response.data);
       })
       .catch(e => {
         console.log(e);
@@ -43,6 +42,8 @@ function Statistics() {
 
   const deleteStatistic = (e, id) => {
     e.preventDefault(); 
+    // let currentstatisticId = currentstatistic.id ? currentstatistic.id : currentstatistic._id
+
     swal({
         title: "Are you sure?",
         text: "Once deleted, you will not be able to recover this imaginary file!",
@@ -58,7 +59,7 @@ function Statistics() {
                      swal("Poof! Your imaginary file has been deleted!", {
                     icon: "success",
                   });
-                setStatistics(statistics.filter((statistic) => statistic.id !== id)) 
+                setStatistics(statistics.filter((statistic) => statistic.id ? statistic.id : statistic._id !== id)) 
             });
         }
          else  {
@@ -88,7 +89,7 @@ else
                                     <table class="table table-bordered table-stripped m-0 text-center">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
+                                                {/* <th>ID</th> */}
                                                 <th>Title</th>
                                                 <th>VALUE</th>
                                                 <th>Actions</th>
@@ -98,13 +99,14 @@ else
                                             {statistics.map((statistic, index) => (
 
                                                 <tr key={index}>
-                                                    <td>{statistic.id}</td>
+                                                    {/* <td>{statistic.id}</td> */}
                                                     <td>{statistic.title}</td>
                                                     <td>{statistic.value}</td>
                                                     <td>
                                                         <div className="text-center">
-                                                            <Link to={`/editstatistic/${statistic.id}`}><span class="icon-pencil"></span></Link>
-                                                            <span onClick={(e) => deleteStatistic(e, statistic.id)} class="icon-trash-2"></span>
+                                                            {/* <Link to={`/editstatistic/${statistic.id}`}><span class="icon-pencil"></span></Link> */}
+                                                            <Link to={`/editstatistic/${statistic.id ? statistic.id : statistic._id}`}><span class="icon-pencil"></span></Link>
+                                                            <span onClick={(e) => deleteStatistic(e, statistic.id ? statistic.id : statistic._id)} class="icon-trash-2"></span>
                                                         </div>
                                                     </td>
                                                 </tr>

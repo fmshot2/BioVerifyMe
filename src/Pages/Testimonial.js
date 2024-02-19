@@ -28,7 +28,8 @@ function Testimonial() {
         TestimonialDataService.getAll()
             .then(response => {
                 console.log("tutossssr", response);
-                setTestimonials(response.data.data);
+                process.env.REACT_APP_API_SOURCE === 'laravel' ? setTestimonials(response.data) : setTestimonials(response.data.data);
+
                 // const lastTwo = cars.slice(-2);
                 setLoading(false);
                 console.log("about", response.data);
@@ -83,7 +84,7 @@ else
                           <table class="table table-bordered table-stripped m-0 text-center">
                               <thead>
                                   <tr>
-                                      <th>ID</th>
+                                      {/* <th>ID</th> */}
                                       <th>Name</th>
                                       <th>Details</th>
                                       <th>Rating</th>
@@ -95,14 +96,14 @@ else
                                   {testimonials.map((testimonial, index) => (
 
                                       <tr key={index}>
-                                          <td>{testimonial.id}</td>
+                                          {/* <td>{testimonial.id ? testimonial.id : testimonial._id}</td> */}
                                           <td>{testimonial.name}</td>
                                           <td>{testimonial.details}</td>
                                           <td>{testimonial.rating}</td>
                                           <td>{testimonial.Profession}</td>
                                           <td>
                                               <div className="text-center">
-                                                  <Link to={`/edittestimonial/${testimonial.id}`}><span class="icon-pencil"></span></Link>
+                                                  <Link to={`/edittestimonial/${testimonial.id ? testimonial.id : testimonial._id}`}><span class="icon-pencil"></span></Link>
                                                   <span onClick={(e) => deleteTestimonial(e, testimonial.id)}class="icon-trash-2"></span>
                                               </div>
                                           </td>

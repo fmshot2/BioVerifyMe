@@ -28,8 +28,7 @@ function EditStatistics() {
     StatisticsDataService.get(id)
       .then(response => {
         console.log("statistic", response);
-        setCurrentStatistic(response.data);
-      
+        process.env.REACT_APP_API_SOURCE === 'laravel' ? setCurrentStatistic(response.data) : setCurrentStatistic(response.data.data);      
         console.log("services", currentstatistic);
       })
       .catch(e => {
@@ -65,8 +64,8 @@ function EditStatistics() {
 
   const updateStatistic = (e) => {
     e.preventDefault();
-
-    StatisticsDataService.update(currentstatistic.id, currentstatistic)
+    let currentstatisticId = currentstatistic.id ? currentstatistic.id : currentstatistic._id
+    StatisticsDataService.update(currentstatisticId, currentstatistic)
       .then(response => {
         console.log( "statistic", response.data);
         setMessage("The statistic was updated successfully!");
@@ -105,7 +104,7 @@ function EditStatistics() {
                           value={currentstatistic.title}></input>
                       </div>
                     </div>
-                    <div className="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
+                    {/* <div className="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
                       <div className="form-group">
                         <label htmlFor="inputDate">Input ID</label>
                         <input type="id" className="form-control" id="inputId"
@@ -114,7 +113,7 @@ function EditStatistics() {
                           value={currentstatistic.id}>
                           </input>
                       </div>
-                    </div>
+                    </div> */}
 
                     <div className="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
                       <div className="form-group">
