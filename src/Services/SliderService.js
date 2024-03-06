@@ -1,31 +1,31 @@
 import http from "../http-common";
 
 const getAll = () => {
-  return http.get("/slider");
+  return http.get("/sliders");
 };
 
 const get = id => {
-  return http.get(`/slider/${id}`);
+  return http.get(`/sliders/${id}`);
 };
 
 const create = data => {
-  return http.post("/slider", data);
+  return http.post("/sliders", data);
 };
 
 const update = (id, data) => {
-  return http.put(`/slider/${id}`, data);
+  return http.put(`/sliders/${id}`, data);
 };
 
 const remove = id => {
-  return http.delete(`/slider/${id}`);
+  return http.delete(`/sliders/${id}`);
 };
 
 const removeAll = () => {
-  return http.delete(`/slider`);
+  return http.delete(`/sliders`);
 };
 
 const findByTitle = searchTitle => {
-  return http.get(`/slider/${searchTitle}`);
+  return http.get(`/sliders/${searchTitle}`);
 };
 
 

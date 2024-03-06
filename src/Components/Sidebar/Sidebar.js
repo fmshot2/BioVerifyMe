@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+// import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import classes from './Sidebar.module.css';
+
 
 const divStyle = {
 	"overflow-y": "auto",
@@ -45,7 +47,7 @@ function Sidebar() {
 
 					{/*-- sidebar menu start */}
 					<div className="sidebar-menu">
-						<ul>
+						<ul className={classes.list}>
 							<li className="sidebar-dropdown active">
 								<Link to="/">
 								<i className="icon-unlock"></i>
@@ -63,8 +65,10 @@ function Sidebar() {
 										<li>
 											<Link to={"/galleries"}>GALLERY</Link>
 										</li> */}
-							<li>
-								<Link to="/abouts">
+							<li className={({ isActive }) =>
+									isActive ? classes.active : undefined
+								}>
+								<Link to="/about">
 									<i className="icon-circular-graph"></i>
 									<span className="menu-text">About</span>
 								</Link>
@@ -82,9 +86,9 @@ function Sidebar() {
 								</Link>
 							</li>
 							<li>
-								<Link to="/slider">
+								<Link to="/sliders">
 									<i className="icon-layers2"></i>
-									<span className="menu-text">SLIDER</span>
+									<span className="menu-text">SLIDERS</span>
 								</Link>
 							</li>
 							<li>
@@ -106,10 +110,10 @@ function Sidebar() {
 								</Link>
 							</li>
 							<li className="sidebar-dropdown">
-								<a href="/previousevents">
+							<Link to="/events" className="current-page">
 									<i className="icon-calendar1"></i>
 									<span className="menu-text">EVENTS</span>
-								</a>
+								</Link>
 							</li>
 							<li className="sidebar-dropdown">
 								<a href="/previousevents">

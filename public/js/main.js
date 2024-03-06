@@ -1,4 +1,3 @@
-// import $ from 'jquery';
 
 // Todays Date
 $(function() {

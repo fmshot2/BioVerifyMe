@@ -29,7 +29,7 @@ function Gallery() {
         console.log("gallery", response);
         process.env.REACT_APP_API_SOURCE === 'laravel' ? setGallery(response.data) : setGallery(response.data.data);
         setLoading(false);
-        console.log("about", response.data);
+        console.log("gallery", response.data);
       })
       .catch(e => {
         console.log(e);

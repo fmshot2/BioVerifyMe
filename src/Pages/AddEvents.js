@@ -1,32 +1,34 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import AuthService from "../Services/Auth/auth.service";
-import EventsDataService  from "../Services/EventsService";
-import {Link, useNavigate} from 'react-router-dom';
+import EventsDataService from "../Services/EventsService";
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '../ReUsables/Button'
 
 
-const AddEvent  = () => {
+const AddEvent = () => {
   let navigate = useNavigate();
 
   const initialEventState = {
     // id: null,
     title: "",
     details: "",
-    date: "",
+    start_date: "",
+    no_of_days: "",
     // status: ""
   };
   const [event, setEvent] = useState(initialEventState);
   const [submitted, setSubmitted] = useState(false);
+  const [responseObj, setresponseObj] = useState({});
 
   useEffect(() => {
     const user = AuthService.getCurrentUser();
     if (!user) {
       navigate("/login");
     } else {
-         return
+      return
     }
 
-}, []);
+  }, []);
 
   const handleInputChange = input => {
     const { name, value } = input.target;
@@ -37,22 +39,28 @@ const AddEvent  = () => {
     var data = {
       title: event.title,
       details: event.details,
-      date: event.date,
+      no_of_days: event.no_of_days,
+      start_date:  event.start_date,
       // status: event.status
-
     };
+    console.log("data event", data);
+    // return;
 
     EventsDataService.create(data)
       .then(response => {
+        process.env.REACT_APP_API_SOURCE === 'laravel' ? setresponseObj(response.data) : setresponseObj(response.data.data);
+// console.log("addevent", response.data);
+
         setEvent({
           // id: response.data.id,
-          title: response.data.title,
-          details: response.data.details,
-          date: response.data.date,
+          title: responseObj.title,
+          details: responseObj.details,
+          start_date: responseObj.start_date,
+          no_of_days: responseObj.no_of_days,
+          end_date: responseObj.end_date,
           // status: response.data.status
         });
         setSubmitted(true);
-        console.log( "addevent",response.data);
       })
       .catch(e => {
         console.log(e);
@@ -64,23 +72,23 @@ const AddEvent  = () => {
     setSubmitted(false);
   };
 
-   return (
+  return (
     <div className="submit-form">
       {submitted ? (
         <div>
-                  <h4>You submitted successfully!</h4>
-                  
+          <h4>You submitted successfully!</h4>
 
-        <div className="d-flex justify-content-between">
-          <Button
+
+          <div className="d-flex justify-content-between">
+            <Button
               size='btn-sm'
               textcolor='white'
               color='btn-warning'
-               text="Add Event"
-               onClick={newEvent} />
-          <Link to={'/events'} className="btn btn-warning btn-sm float-end">Events</Link>
+              text="Add Event"
+              onClick={newEvent} />
+            <Link to={'/events'} className="btn btn-warning btn-sm float-end">Events</Link>
 
-        </div></div>
+          </div></div>
       ) : (
         <div>
           <div className="form-group">
@@ -109,15 +117,27 @@ const AddEvent  = () => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="date">Date</label>
+            <label htmlFor="date">Starting Date</label>
             <input
               type="date"
               className="form-control"
               id="date"
               required
-              value={event.date}
+              value={event.start_date}
               onChange={handleInputChange}
-              name="date"
+              name="start_date"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="date">No of Days</label>
+            <input
+              type="text"
+              className="form-control"
+              id="no_of_days"
+              required
+              value={event.no_of_days}
+              onChange={handleInputChange}
+              name="no_of_days"
             />
           </div>
           {/*<div className="form-group">
@@ -132,15 +152,15 @@ const AddEvent  = () => {
               name="status"
             />
       </div>*/}
-<div className="d-flex justify-content-between">
-<Button
+          <div className="d-flex justify-content-between">
+            <Button
               size='btn-sm'
               textcolor='white'
               color='btn-warning'
-               text="Submit"
-               onClick={saveEvent} />
-                         <Link to={'/events'} className="btn btn-warning btn-sm float-end">Events</Link>
-</div>
+              text="Submit"
+              onClick={saveEvent} />
+            <Link to={'/events'} className="btn btn-warning btn-sm float-end">Events</Link>
+          </div>
         </div>
       )}
     </div>
@@ -148,4 +168,3 @@ const AddEvent  = () => {
 };
 
 export default AddEvent
-  

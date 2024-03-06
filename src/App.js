@@ -1,14 +1,15 @@
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import "./App.css";
+import Home from './Pages/Home';
+import RootLayout from './Pages/Root';
+import ErrorPage from './Pages/Error';
 
-import Sidebar from './Components/Sidebar'
-import Navbar from './Components/Navbar'
-import TopCards from './Components/TopCards'
-import {BrowserRouter as Router,  Routes, Route } from 'react-router-dom';
-import Users from './Pages/Users'
-import About from './Pages/About' 
+import About from './Pages/About'
+
 import Config from './Pages/Config'
 import Gallery from './Pages/Gallery'
 import EditGallery from './Pages/EditGallery'
+import EditSlider from './Pages/EditSlider'
 import Partners from './Pages/Partners' 
 import PreviousEvents from './Pages/PreviousEvents'
 import Services from './Pages/Services' 
@@ -49,83 +50,71 @@ import EditSpeakers from './Pages/EditSpeakers';
 import Login from './Pages/AuthPages/Login';
 import Profile from './Pages/AuthPages/Profile';
 import Register from './Pages/AuthPages/Register';
+import Users from './Pages/Users'
 
+
+
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <RootLayout />,
+    errorElement: <ErrorPage />,
+    children: [
+      { index: true, element: <Home /> },
+      { path: '/', element: <Home /> },
+      { path: 'about', element: <About /> },
+      { path: "users", element: <Users /> },
+      { path: "volunteers", element: <Volunteers /> },
+      { path: "addvolunteer", element: <AddVolunteer /> },
+      { path: "editvolunteer", element: <EditVolunteer/> },
+      { path: "vulcs", element: <Vulcs /> },
+      { path: "addvulc", element: <AddVulc/> },
+      { path: "editvulc", element: <EditVulc/> },
+      { path: "", element: <About /> },
+      { path: "abouts", element: <About /> },
+      { path: "topics", element: <Topics /> },
+      { path: "speakers", element: <Speakers /> },
+      { path: "config", element: <Config /> },
+      { path: "galleries", element: <Gallery />}  ,
+      { path: "editgallery/:id", element: <EditGallery />}  ,
+      { path: "editslider/:id", element: <EditSlider />}  ,
+      { path: "partners", element: <Partners />}  ,
+      { path: "previousevents", element: <PreviousEvents /> },
+      { path: "services", element: <Services />}  ,
+      { path: "sliders", element: <Slider />}  ,
+      { path: "statistics", element: <Statistics />}  ,
+      { path: "testimonials", element: <Testimonials />}  ,
+      { path: "upcomingevents", element: <UpcomingEvents /> },
+      { path: "events", element: <Events /> },
+      { path: "attendees", element: <Attendees /> },
+      { path: "editupcoming/:id", element: <EditUpcoming /> },
+      { path: "editprevious/:id", element: <EditPrevious /> },
+      { path: "eventdetails/:id", element: <EventDetails /> },
+      { path: "editevent/:id", element: <EditEvent />}  ,
+      { path: "editservice/:id", element: <EditServices />}  ,
+      { path: "editstatistic/:id", element: <EditStatistics /> },
+      { path: "edittestimonial/:id", element: <EditTestimonials /> },
+      { path: "edittopics/:id", element: <EditTopics /> },
+      { path: "editspeakers/:id", element: <EditSpeakers /> },
+      { path: "editusers/:id", element: <EditUser /> },
+      { path: "editspeakers", element: <EditSpeakers /> },
+      { path: "addtestimonials", element: <AddTestimonials /> },
+      { path: "addabout", element: <AddAbout /> },
+      { path: "event/:id/addtopic", element: <AddTopic /> },
+      { path: "item/:id/addspeaker", element: <AddSpeaker /> },
+      { path: "addevents", element: <AddEvent /> },
+      { path: "addstatistics", element: <AddStatistics /> },
+      { path: "addconfig", element: <AddConfig /> },
+      { path: "addservices", element: <AddServices /> },
+      { path: "addattendee", element: <AddAttendee /> },
+      { path: "array", element: <Array /> },
+    ],
+  },
+]);
 
 function App() {
-  return (
-
-<Router>
-  <div className="page-wrapper">
-    <Sidebar />
-    <div className="page-content">
-      <Navbar />
-      <div className="main-container">
-      <TopCards />
-
-      <Routes>
-      {/* <Route exact path="/" element={<Home />} /> */}
-        <Route exact path="/login" element={<Login />} />
-        <Route exact path="/register" element={<Register />} />
-        <Route exact path="/profile" element={<Profile />} />
-        {/* <Route exact path="/" element={<Users />} /> */}
-        <Route exact path="/users" element={<Users />} />
-        <Route exact path="/volunteers" element={<Volunteers />} />
-        <Route exact path="/addvolunteer" element={<AddVolunteer />} />
-        <Route exact path="/editvolunteer" element={<EditVolunteer/>} />
-        <Route exact path="/vulcs" element={<Vulcs />} />
-        <Route exact path="/addvulc" element={<AddVulc/>} />
-        <Route exact path="/editvulc" element={<EditVulc/>} />
-        <Route exact path="/" element={<About />} />
-        <Route exact path="/abouts" element={<About />} />
-        <Route exact path="/topics" element={<Topics />} />
-        <Route exact path="/speakers" element={<Speakers />} />
-        <Route path="/config" element={<Config />} />
-        <Route exact path="/galleries" element={<Gallery />} /> 
-        <Route  path="/editgallery/:id" element={<EditGallery />} /> 
-        <Route exact path="/partners" element={<Partners />} /> 
-        <Route exact path="/previousevents" element={<PreviousEvents />} />
-        <Route exact path="/services" element={<Services />} /> 
-        <Route exact path="/slider" element={<Slider />} /> 
-        <Route exact path="/statistics" element={<Statistics />} /> 
-        <Route exact path="/testimonials" element={<Testimonials />} /> 
-        <Route exact path="/upcomingevents" element={<UpcomingEvents />} />
-        <Route exact path="/events" element={<Events />} />
-        <Route exact path="/attendees" element={<Attendees />} />
-        <Route exact path="/editupcoming/:id" element={<EditUpcoming />} />
-        <Route  path="/editprevious/:id" element={<EditPrevious />} />
-        <Route  path="/eventdetails/:id" element={<EventDetails />} />
-        <Route  path="/editevent/:id" element={<EditEvent />} /> 
-        <Route  path="/editservice/:id" element={<EditServices />} /> 
-        <Route  path="/editstatistic/:id" element={<EditStatistics />} />
-        <Route  path="/edittestimonial/:id" element={<EditTestimonials />} />
-        <Route exact path="/edittopics/:id" element={<EditTopics />} />
-        <Route exact path="/editspeakers/:id" element={<EditSpeakers />} />
-        <Route exact path="/editusers/:id" element={<EditUser />} />
-        <Route exact path="/editspeakers" element={<EditSpeakers />} />
-        <Route exact path="/addtestimonials" element={<AddTestimonials />} />
-        <Route exact path="/addabout" element={<AddAbout />} />
-        <Route exact path="/event/:id/addtopic" element={<AddTopic />} />
-        <Route exact path="/item/:id/addspeaker" element={<AddSpeaker />} />
-        <Route exact path="/addevents" element={<AddEvent />} />
-        <Route exact path="/addstatistics" element={<AddStatistics />} />
-        <Route exact path="/addconfig" element={<AddConfig />} />
-        <Route exact path="/addservices" element={<AddServices />} />
-        <Route exact path="/addattendee" element={<AddAttendee />} />
-        <Route exact path="/array" element={<Array />} />
-
-
-        
-
-        {/*<Route exact path="/events" element={<Events />} />
-        <Route path="/eventdetails/:id" element={<EventDetails />} />*/}
-      </Routes>
-      </div>
-      </div>
-
-    </div>
-
-</Router>
-  );
+    return <RouterProvider router={router} />;    
 }
 
 export default App;

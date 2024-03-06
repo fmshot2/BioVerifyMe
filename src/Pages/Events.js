@@ -19,7 +19,7 @@ function Events() {
     useEffect(() => {
         const user = AuthService.getCurrentUser();
 
-        if (!user) {
+        if (user) {
             retrieveEvents();
         } else {
             navigate("/login");

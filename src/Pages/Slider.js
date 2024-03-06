@@ -1,48 +1,126 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+
+import { Link, useNavigate } from 'react-router-dom';
+// import sliderDataService from "../Services/sliderService";
+import SliderDataService from "../Services/SliderService";
+import AuthService from "../Services/Auth/auth.service";
+import swal from 'sweetalert';
 
 function Slider() {
-    return (
-        <div id="carouselExampleIndicators" className="carousel slide" data-ride="carousel">
-            <ol className="carousel-indicators">
-                <li data-target="#carouselExampleIndicators" data-slide-to="0" className="active"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-            </ol>
-            <div className="carousel-inner">
-                <div className="carousel-item active">
-                    <img className="d-block w-100" src="images/slides/slider-mainbg-001.jpg" alt="First slide"></img>
-                    <div className="carousel-caption d-none d-md-block">
-                        <h2>asasasasasas</h2>
-                        <p>grat!</p>
-                    </div>
-                </div>
-                <div className="carousel-item">
-                    <img className="d-block w-100" src="images/slides/slider-mainbg-002.jpg" alt="Second slide"></img>
-                    <div className="carousel-caption d-none d-md-block">
-                        <h2>AHI</h2>
-                        <p>ffff</p>
-                    </div>
-                </div>
-                <div className="carousel-item">
-                    <img className="d-block w-100" src="images/slides/slider-mainbg-001.jpg" alt="Third slide"></img>
-                    <div className="carousel-caption d-none d-md-block">
-                        <h5>AHi</h5>
-                        <p>ghghgh</p>
-                    </div>
-                </div>
-            </div>
-            <a className="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span className="sr-only">Previous</span>
-            </a>
-            <a className="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                <span className="sr-only">Next</span>
-            </a>
-        </div>
-    )
+    let navigate = useNavigate();
 
-}
+    const [loading, setLoading] = useState(true);
+    // const [galleries, setslider] = useState([]);
+    const [sliders, setSlider] = useState([]);
+  
+    useEffect(() => {
+      const user = AuthService.getCurrentUser();
+  
+      if (user) {
+        retrieveSlider();
+      } else {
+        navigate("/login");
+  
+      }
+  
+    }, []);
+  
+    const retrieveSlider = () => {
+      SliderDataService.getAll()
+        .then(response => {
+          console.log("slider", response);
+          process.env.REACT_APP_API_SOURCE === 'laravel' ? setSlider(response.data) : setSlider(response.data.data);
+          setLoading(false);
+          console.log("slider", response.data);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    };
+  
+    const deleteSlider = (e, id) => {
+      e.preventDefault();
+      swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this imaginary file!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+        .then((willDelete) => {
+          if (willDelete) {
+            SliderDataService.remove(id)
+              .then(response => {
+                console.log("delete", response.data);
+                swal("Poof! Your imaginary file has been deleted!", {
+                  icon: "success",
+                });
+                setSlider(sliders.filter((slider) => slider._id !== id))
+              });
+          }
+          else {
+            swal("Your imaginary file is safe!");
+          }
+        })
+    };
+    if (loading) {
+      return <h4>Loading Events...</h4>
+    }
+    else
+      return (
+  
+        <div>
+          <div className="row">
+            <Link to={'/addevents'} className="btn btn-primary btn-sm float-end"> Add  EVENTS</Link>
+          </div>
+  
+  
+          <div class="row gutters">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+              <div class="card border-warning">
+                <div class="card-header bg-warning">Sliders</div>
+                <div class="card-body text-primary">
+                  {/* <h5 class="card-title">Sliders Table</h5> */}
+                  <div class="table-responsive">
+                    <table class="table table-bordered table-stripped m-0 text-center">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Title</th>
+                          <th>Details</th>
+                          <th>Image</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {sliders.map((slider, index) => (
+  
+                          <tr key={index}>
+                            <td>{slider.id ? slider.id : slider._id}</td>
+                            <td>{slider.title}</td>
+                            <td>{slider.details}</td>
+                            <td>
+                               <img width="32" height="32" src={`${process.env.REACT_APP_API_BaseURL}/uploads/${slider.images[0].name}`}>
+                            </img>
+                             </td>
+                            <td>
+                              <div className="text-center">
+                                <Link to={`/editslider/${slider._id}`}><span class="icon-pencil"></span></Link>
+                                <span onClick={(e) => deleteSlider(e, slider._id)} class="icon-trash-2"></span>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+  
+            </div>
+          </div>
+        </div>
+      );
+  }
 
 export default Slider
