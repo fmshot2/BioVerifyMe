@@ -22,7 +22,7 @@ const AddEvent = () => {
 
   useEffect(() => {
     const user = AuthService.getCurrentUser();
-    if (!user) {
+    if (user) {
       navigate("/login");
     } else {
       return

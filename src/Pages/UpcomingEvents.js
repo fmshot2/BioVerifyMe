@@ -14,22 +14,22 @@ function Upcoming() {
 
 
 
-    useEffect(() => {
-        const user = AuthService.getCurrentUser();
+    // useEffect(() => {
+    //     const user = AuthService.getCurrentUser();
   
-        if (user) {
-            retrieveUpcoming();
-        } else {
-            navigate("/login");
+    //     if (user) {
+    //         retrieveUpcoming();
+    //     } else {
+    //         navigate("/login");
   
-        }
+    //     }
   
-    }, []);
+    // }, []);
 
     const retrieveUpcoming = () => {
     UpcomingDataService.getAll()
       .then(response => {
-       console.log("tutossssr", response);
+    //    console.log("tutossssr", response);
        upcomingevents.length < 1 && setLength(true);
         setUpcomingEvents(response.data);
 

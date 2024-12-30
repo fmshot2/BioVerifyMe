@@ -14,7 +14,7 @@ function PartnersComponent() {
   useEffect(() => {
     const user = AuthService.getCurrentUser();
 
-    if (user) {
+    if (!user) {
       retrievePartner();
     } else {
       navigate("/login");
@@ -68,9 +68,9 @@ function PartnersComponent() {
     return (
 
       <div>
-        <div className="row">
-          <Link to={'/addevents'} className="btn btn-primary btn-sm float-end"> Add  EVENTS</Link>
-        </div>
+        {/* <div className="row">
+          <Link to={'/addevent'} className="btn btn-primary btn-sm float-end"> Add  EVENTS</Link>
+        </div> */}
 
 
         <div class="row gutters">

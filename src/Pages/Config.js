@@ -36,7 +36,7 @@ const [message, setMessage] = useState("");
 useEffect(() => {
   const user = AuthService.getCurrentUser();
 
-  if (user) {
+  if (!user) {
       retrieveConfig();
   } else {
       navigate("/login");
@@ -70,7 +70,7 @@ useEffect(() => {
     ConfigDataService.update(config.id ? config.id : config._id, config)
       .then(response => {
         console.log( "config", response.data);
-        setMessage(" Config Status was updated successfully!");
+        setMessage(" Config Status was updated successfully!!");
         console.log( "configs", message);
 
       })

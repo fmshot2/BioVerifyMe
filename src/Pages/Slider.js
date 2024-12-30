@@ -16,7 +16,7 @@ function Slider() {
     useEffect(() => {
       const user = AuthService.getCurrentUser();
   
-      if (user) {
+      if (!user) {
         retrieveSlider();
       } else {
         navigate("/login");
@@ -70,9 +70,9 @@ function Slider() {
       return (
   
         <div>
-          <div className="row">
-            <Link to={'/addevents'} className="btn btn-primary btn-sm float-end"> Add  EVENTS</Link>
-          </div>
+          {/* <div className="row">
+            <Link to={'/addevent'} className="btn btn-primary btn-sm float-end"> Add  EVENTS</Link>
+          </div> */}
   
   
           <div class="row gutters">

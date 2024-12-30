@@ -11,25 +11,35 @@ function ErrorPage() {
   let message = 'Something went wrong!';
 
   if (error.status === 500) {
-    message = error.data.message;
+    // use this if u built your own response object in Events.js page
+    // message = JSON.parse(error.data).message
+    // use this if u're using react's json function in Events.js page
+
+    message = error.data.message
+
+
+    console.log('eroorpagemessage in 500', message);
+
   }
 
   if (error.status === 404) {
     title = 'Not found!';
     message = 'Could not find resource or page.';
+    console.log('eroorpagemessagein 404', message);
   }
 
+
   return (
-      <div className="page-wrapper">
-    <Sidebar />
-    <div className="page-content">
-      <Navbar />
-      <div className="main-container">
-      <PageContent title={title}>
-        <p>{message}</p>
-      </PageContent>
-    </div>
-    </div>
+    <div className="page-wrapper">
+      <Sidebar />
+      <div className="page-content">
+        <Navbar />
+        <div className="main-container">
+          <PageContent title={title}>
+            <p>{message}</p>
+          </PageContent>
+        </div>
+      </div>
     </div>
   );
 }

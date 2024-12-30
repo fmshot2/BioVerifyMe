@@ -16,7 +16,7 @@ function Statistics() {
 
     useEffect(() => {
         const user = AuthService.getCurrentUser();
-        if (user) {
+        if (!user) {
             retrieveStatistics();
         } else {
             navigate("/login");

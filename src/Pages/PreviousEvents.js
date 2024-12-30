@@ -13,21 +13,21 @@ function PreviousEvents() {
     const [previousevents, setPreviousEvents] = useState([]);
     
 
-    useEffect(() => {
-        const user = AuthService.getCurrentUser();
+    // useEffect(() => {
+    //     const user = AuthService.getCurrentUser();
   
-        if (user) {
-            retrievePrevious();
-        } else {
-            navigate("/login");
+    //     if (!user) {
+    //         retrievePrevious();
+    //     } else {
+    //         navigate("/login");
   
-        }
+    //     }
   
-    }, []);
+    // }, []);
     const retrievePrevious = () => {
     PreviousDataService.getAll()
       .then(response => {
-       console.log("tutossssr", response);
+    //    console.log("tutossssr", response);
         setPreviousEvents(response.data);
 
         setLoading(false);
@@ -47,7 +47,7 @@ else
     return (
       <div>
                 <div className="row">
-                    <Link to={'/addevents'} className="btn btn-primary btn-sm float-end"> Add  PREVIOUSEVENTS</Link>
+                    <Link to={'/addevent'} className="btn btn-primary btn-sm float-end"> Add  PREVIOUSEVENTS</Link>
                 </div>
 
 

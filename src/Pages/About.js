@@ -25,7 +25,7 @@ function About() {
 
     useEffect(() => {
       const user = AuthService.getCurrentUser();
-      if (!user) {
+      if (user) {
         navigate("/login");
       } else {
         retrieveAbout();
@@ -165,7 +165,7 @@ else
         <div>
           <br />
           <h2 className="text-center text-danger">No About Details, please Add About Details ...</h2>
-          <Link to={'/addabout'} className="btn btn-warning btn-sm float-end">AddAbout</Link>
+          <Link to={'/addabout'} className="btn btn-warning btn-sm float-end">AddAbouts</Link>
         </div>
       )}
 

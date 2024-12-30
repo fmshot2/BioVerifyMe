@@ -21,7 +21,7 @@ function TopCards() {
     const retrieveEvents = () => {
         EventsDataService.getAll()
             .then(response => {
-                console.log("events", response);
+                // console.log("events", response);
                 setEvents(response.data.length);
                 setLoading(false);
             })
@@ -33,7 +33,7 @@ function TopCards() {
 	const retrieveUpcoming = () => {
 		UpcomingDataService.getAll()
 		  .then(response => {
-		   console.log("tutossssr", response);
+		//    console.log("tutossssr", response);
 			setUpcomingEvents(response.data.length);
 			setLoading(false);
 			console.log("about", response.data);

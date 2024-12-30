@@ -9,7 +9,6 @@ import swal from 'sweetalert';
 
 
 function EditGallery() {
-  console.log('gall');
   let params = useParams();
   let navigate = useNavigate();
 
@@ -19,7 +18,8 @@ function EditGallery() {
     images: [],
     details: ""
   };
-            // console.log("setting1", currentgallery)
+  console.log("para", params);
+
 
   const [currentgallery, setCurrentGallery] = useState(initialGalleryDetailsState);
   const [loading, setLoading] = useState(true);
@@ -29,6 +29,7 @@ function EditGallery() {
     GalleryDataService.get(id)
       .then(response => {
         process.env.REACT_APP_API_SOURCE === 'laravel' ? setCurrentGallery(response.data) : setCurrentGallery(response.data.data);
+        // console.log("hhhh", currentgallery);
       })
       .catch(e => {
         console.log(e);
@@ -36,11 +37,11 @@ function EditGallery() {
   };
 
   const handleInputChange = event => {
-    if (event.target.name === 'file') {     
+    if (event.target.name === 'file') {
       const reader = new FileReader();
       reader.onload = () => {
         if (reader.readyState === 2) {
-          setImagePreview(event.target.files[0] )
+          setImagePreview(event.target.files[0])
           setCurrentGallery((prevState) => {
             return { ...prevState, images: event.target.files[0] };
           });
@@ -61,7 +62,6 @@ function EditGallery() {
 
   useEffect(() => {
     getGalleryDetails(params.id);
-    console.log("hhhh", currentgallery);
   }, [params.id]);
 
 
@@ -71,9 +71,14 @@ function EditGallery() {
     formData.set('title', currentgallery.title);
     formData.set('details', currentgallery.details);
     formData.set('file', currentgallery.images);
+    // console.log('form', formData);
+    console.log("formhhhh", currentgallery);
+
+
 
     GalleryDataService.update(currentgallery.id, formData)
       .then(response => {
+        console.log('Gallery updated successfully:', response.data);
       })
       .catch(e => {
         console.log(e);
@@ -106,9 +111,9 @@ function EditGallery() {
         }
       })
   };
- const getColumnWidth = () => {
-  return imagePreview === null ? 4 : 3;
- }
+  const getColumnWidth = () => {
+    return imagePreview === null ? 4 : 3;
+  }
 
   return (
     <div className="container">
@@ -120,7 +125,7 @@ function EditGallery() {
 
               <div className="row gutters">
 
-              <div className={`col-xl-${getColumnWidth()} col-lg-${getColumnWidth()} col-md-${getColumnWidth()} col-sm-${getColumnWidth()} col-12`}>
+                <div className={`col-xl-${getColumnWidth()} col-lg-${getColumnWidth()} col-md-${getColumnWidth()} col-sm-${getColumnWidth()} col-12`}>
                   <div className="form-group">
                     <label htmlFor="inputTitle">TITLE</label>
                     <input type="text" className="form-control" id="inputTitle"
@@ -144,46 +149,46 @@ function EditGallery() {
                 <div className={`col-xl-${getColumnWidth()} col-lg-${getColumnWidth()} col-md-${getColumnWidth()} col-sm-${getColumnWidth()} col-12`}>
                   <div className="form-group">
                     <label htmlFor="image">Input Image</label>
-                    <input type="file" accept="image/*" 
-                      multiple="multiple" 
-                      className="form-control" 
+                    <input type="file" accept="image/*"
+                      multiple="multiple"
+                      className="form-control"
                       id="image"
                       placeholder="Upload Image"
-                      name="file" 
+                      name="file"
                       onChange={handleInputChange}
-                      // value={currentgallery.images[0].name}                    
-                      >
+                    // value={currentgallery.images[0].name}                    
+                    >
                     </input>
                   </div>
                 </div>
                 <div className={`col-xl-${getColumnWidth()} col-lg-${getColumnWidth()} col-md-${getColumnWidth()} col-sm-${getColumnWidth()} col-12`}>
                   <div className="form-group">
-                  { imagePreview ?  (
-                    <div>
-                    <label htmlFor="image">Preview</label>
-                  <div><img  width="72" height="50" src={URL.createObjectURL(imagePreview)}></img></div>
-                  </div>) : <p></p>}
+                    {imagePreview ? (
+                      <div>
+                        <label htmlFor="image">Preview</label>
+                        <div><img width="72" height="50" src={URL.createObjectURL(imagePreview)}></img></div>
+                      </div>) : <p></p>}
                   </div>
                 </div>
               </div>
-          
-            <div className="d-flex justify-content-between">
-              <div>
-                <Button
-                  size='btn-sm'
-                  textcolor='white'
-                  color='btn-primary'
-                  text="Update Gallery"
-                  // onClick={updateGallery}
-                  type="submit" />
-                {/* <p>{message}</p> */}
+
+              <div className="d-flex justify-content-between">
+                <div>
+                  <Button
+                    size='btn-sm'
+                    textcolor='white'
+                    color='btn-primary'
+                    text="Update Gallery"
+                    // onClick={updateGallery}
+                    type="submit" />
+                  {/* <p>{message}</p> */}
+                </div>
+                <div>
+                  <Link to={"/galleries"}
+                    type="button" className="btn btn-danger "
+                  >All Galleries</Link>
+                </div>
               </div>
-              <div>
-                <Link to={"/galleries"}
-                  type="button" className="btn btn-danger "
-                >All Galleries</Link>
-              </div>
-            </div>
             </form>
           </div>
         </div>

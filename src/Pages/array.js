@@ -91,7 +91,7 @@ function Events() {
 
             <div>
                 <div className="row">
-                    <Link to={'/addevents'} className="btn btn-primary btn-sm float-end"> Add  EVENTS</Link>
+                    <Link to={'/addevent'} className="btn btn-primary btn-sm float-end"> Add  EVENTS</Link>
                 </div>
 
 

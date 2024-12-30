@@ -26,7 +26,7 @@ function Services() {
     const retrieveService = () => {
     ServiceDataService.getAll()
       .then(response => {
-       console.log("tutossssr", response);
+    //    console.log("tutossssr", response);
         setServices(response.data);
 
         setLoading(false);

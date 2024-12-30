@@ -5,7 +5,10 @@ const getAll = () => {
 };
 
 const get = id => {
-  return http.get(`/events/${id}`);
+  const item = http.get(`/events/${id}`);
+  console.log('idd3', item);
+  return item;
+
 };
 
 const create = data => {
@@ -13,7 +16,7 @@ const create = data => {
 };
 
 const update = (id, data) => {
-  return http.put(`/event/${id}`, data);
+  return http.put(`/events/${id}`, data);
 };
 
 const remove = id => {

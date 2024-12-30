@@ -1,12 +1,19 @@
-// import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+// import { Link, NavLink } from 'react-router-dom';
 import classes from './Sidebar.module.css';
+import { Route, Link, NavLink, Routes, useLocation } from 'react-router-dom';
 
 
 const divStyle = {
 	"overflow-y": "auto",
 };
+
 function Sidebar() {
+	const [newClass, setNewClass] = useState("");
+
+	const location = useLocation();
+	const { hash, pathname, search } = location;
+
 	return (
 		<div>
 			<nav id="sidebar" className="sidebar-wrapper" style={divStyle}>
@@ -48,80 +55,68 @@ function Sidebar() {
 					{/*-- sidebar menu start */}
 					<div className="sidebar-menu">
 						<ul className={classes.list}>
-							<li className="sidebar-dropdown active">
+							<li className={`sidebar-dropdown ${location.pathname === "/" ? "active" : ""}`}>
 								<Link to="/">
-								<i className="icon-unlock"></i>
+									<i className="icon-unlock"></i>
 									<span className="menu-text">Authentication</span>
-								</Link>								
+								</Link>
 							</li>
-										{/* <li>
-											<Link to={'/abouts'}></Link>
-											<i className="icon-circular-graph"></i>
-									<span className="menu-text">About</span>
-										</li>
-										<li>
-											<Link to={"/config"}>CONFIG</Link>
-										</li>
-										<li>
-											<Link to={"/galleries"}>GALLERY</Link>
-										</li> */}
-							<li className={({ isActive }) =>
-									isActive ? classes.active : undefined
-								}>
-								<Link to="/about">
+							<li className={`box ${location.pathname === "/about" ? "active" : ""}`}>
+								<NavLink to="/about" className={({ isActive }) => isActive ? classes.active : undefined} end>
 									<i className="icon-circular-graph"></i>
 									<span className="menu-text">About</span>
-								</Link>
+								</NavLink>
 							</li>
-							<li>
-								<Link to="/config">
-									<i className="icon-line-graph"></i>
-									<span className="menu-text">CONFIG</span>
-								</Link>
-							</li>
-							<li>
-								<Link to="/galleries">
+							<li className={`sidebar-dropdown ${location.pathname === "/events" ? "active" : ""}`}>
+								<Link to="/events">
 									<i className="icon-calendar1"></i>
-									<span className="menu-text">GALLERY</span>
+									<span className="menu-text">EVENTS</span>
 								</Link>
-							</li>
-							<li>
-								<Link to="/sliders">
-									<i className="icon-layers2"></i>
-									<span className="menu-text">SLIDERS</span>
-								</Link>
-							</li>
-							<li>
-								<Link to="/statistics">
-									<i className="icon-circular-graph"></i>
-									<span className="menu-text">STATISTICS</span>
-								</Link>
-							</li>
-							<li>
+							</li>							
+							<li className={`box ${location.pathname === "/testimonial" ? "active" : ""}`}>
 								<Link to="/testimonials">
 									<i className="icon-circular-graph"></i>
 									<span className="menu-text">TESTIMONIALS</span>
 								</Link>
 							</li>
-							<li>
-								<Link to="/partners" className="current-page">
+							<li className={`box ${location.pathname === "/config" ? "active" : ""}`}>
+								<Link to="/config">
+									<i className="icon-line-graph"></i>
+									<span className="menu-text">CONFIG</span>
+								</Link>
+							</li>
+							<li className={`box ${location.pathname === "/galleries" ? "active" : ""}`}>
+								<Link to="/galleries">
+									<i className="icon-calendar1"></i>
+									<span className="menu-text">GALLERY</span>
+								</Link>
+							</li>
+							<li className={`box ${location.pathname === "/sliders" ? "active" : ""}`}>
+								<Link to="/sliders">
+									<i className="icon-layers2"></i>
+									<span className="menu-text">SLIDERS</span>
+								</Link>
+							</li>
+							<li className={`box ${location.pathname === "/statistics" ? "active" : ""}`}>
+								<Link to="/statistics">
+									<i className="icon-circular-graph"></i>
+									<span className="menu-text">STATISTICS</span>
+								</Link>
+							</li>
+
+							<li className={`box ${location.pathname === "/partners" ? "active" : ""}`}>
+								<Link to="/partners">
 									<i className="icon-line-graph"></i>
 									<span className="menu-text">PARTNERS</span>
 								</Link>
 							</li>
-							<li className="sidebar-dropdown">
-							<Link to="/events" className="current-page">
-									<i className="icon-calendar1"></i>
-									<span className="menu-text">EVENTS</span>
-								</Link>
-							</li>
-							<li className="sidebar-dropdown">
+							{/* <li className={`sidebar-dropdown ${location.pathname === "/previousevents" ? "active" : ""}`}>
 								<a href="/previousevents">
 									<i className="icon-calendar1"></i>
 									<span className="menu-text">PREVIOUSEVENTS</span>
 								</a>
-							</li>
-							<li className="sidebar-dropdown">
+							</li> */}
+							<li className={`sidebar-dropdown ${location.pathname === "/galleries" ? "active" : ""}`}>
 								<a href="#">
 									<i className="icon-layers2"></i>
 									<span className="menu-text">Layouts</span>

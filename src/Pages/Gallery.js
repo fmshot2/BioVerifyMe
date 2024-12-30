@@ -14,7 +14,7 @@ function Gallery() {
   useEffect(() => {
     const user = AuthService.getCurrentUser();
 
-    if (user) {
+    if (!user) {
       retrieveGallery();
     } else {
       navigate("/login");
@@ -26,10 +26,10 @@ function Gallery() {
   const retrieveGallery = () => {
     GalleryDataService.getAll()
       .then(response => {
-        console.log("gallery", response);
+        console.log("gallery1", response);
         process.env.REACT_APP_API_SOURCE === 'laravel' ? setGallery(response.data) : setGallery(response.data.data);
         setLoading(false);
-        console.log("gallery", response.data);
+        console.log("gallery2", response.data.data);
       })
       .catch(e => {
         console.log(e);
@@ -69,7 +69,7 @@ function Gallery() {
 
       <div>
         <div className="row">
-          <Link to={'/addevents'} className="btn btn-primary btn-sm float-end"> Add  EVENTS</Link>
+          <Link to={'/addevent'} className="btn btn-primary btn-sm float-end"> Add  EVENTS</Link>
         </div>
 
 
@@ -95,15 +95,23 @@ function Gallery() {
 
                         <tr key={index}>
                           <td>{gallery.id ? gallery.id : gallery._id}</td>
-                          <td>{gallery.title}</td>
-                          <td>{gallery.details}</td>
                           <td>
-                             <img width="32" height="32" src={`${process.env.REACT_APP_API_BaseURL}/uploads/${gallery.images[0].name}`}>
-                          </img>
-                           </td>
+                            <Link to={`${gallery.id ? gallery.id : gallery._id}`}>
+                              {gallery.title}
+                            </Link>
+                          </td>
+                          <td>
+                            <Link to={`${gallery.id ? gallery.id : gallery._id}`}>
+                              {gallery.details}
+                            </Link>
+                          </td>
+                          <td>
+                            <img width="32" height="32" src={`${process.env.REACT_APP_API_BaseURL}/uploads/${gallery?.images[0]?.name}`}>
+                            </img>
+                          </td>
                           <td>
                             <div className="text-center">
-                              <Link to={`/editgallery/${gallery._id}`}><span class="icon-pencil"></span></Link>
+                              <Link to={`${gallery._id}/edit`}><span class="icon-pencil"></span></Link>
                               <span onClick={(e) => deleteGallery(e, gallery._id)} class="icon-trash-2"></span>
                             </div>
                           </td>

@@ -19,7 +19,7 @@ function Userrs() {
     useEffect(() => {
         const user = AuthService.getCurrentUser();
 
-        if (user) {
+        if (!user) {
             retrieveUserrs();
         } else {
             navigate("/login");
