@@ -7,13 +7,14 @@ import axios from 'axios';
 import Button from '../ReUsables/Button'
 import swal from 'sweetalert';
 import { useRouteLoaderData } from 'react-router-dom';
-import EventForm from '../Components/EventForm';
+import EventForm from '../components/EventForm';
 
 
 function EditEvents() {
   let params = useParams();
   let navigate = useNavigate();
   const event = useRouteLoaderData('event-detail');
+  // console.log('eventdetailevent', event);
 
 
   // const initialEventDetailsState = {
@@ -24,9 +25,7 @@ function EditEvents() {
   // const [currentevent, setCurrentEvent] = useState(initialEventDetailsState);
   // console.log('setcurrentevent1', currentevent);
 
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [items, setItems] = useState([]);
+const [items, setItems] = useState([]);
   // const [Topics, setTopics] = useState([]);
 
   // const getEventDetails = id => {
@@ -110,8 +109,8 @@ function EditEvents() {
         </div>
       </div>
       {event ? (
-
-     <EventForm event={event} />
+     
+            <EventForm method="PATCH" event={event} />
 
         // <div className="card">
         //   <div className="card-body">

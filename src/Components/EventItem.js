@@ -1,17 +1,34 @@
-// import classes from './EventItem.module.css';
-import { Link } from 'react-router-dom';
-
+import { Link, useSubmit, useRouteLoaderData } from 'react-router-dom';
+import swal from 'sweetalert';
 
 function EventItem({ event }) {
-  console.log('currenteventdetails', event);
-  
+  const token = useRouteLoaderData('root');
+
+  const submit = useSubmit();
+
   function startDeleteHandler() {
-    // ...
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this imaginary file!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          submit(null, { method: 'delete' });
+        }
+        else {
+          swal("Your imaginary file is safe!");
+        }
+      })
   }
 
   return (
 
-    <table className="table container" style={{ marginLeft: "200px", }}>
+    <table className="table container"
+    // style={{ marginLeft: "200px", }}
+    >
       <thead>
         <tr>
           <th scope="col">ID</th>
@@ -29,16 +46,20 @@ function EventItem({ event }) {
               data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><span className="text-500 fas fa-trash-alt"></span></button></div>
         </td> */}
           <td>
+          {token &&
+
             <div className="text-center">
-              {/* <Link to={`/editevent/${event._id}`}><span class="icon-pencil"></span></Link> */}
-              <Link to='edit'><span class="icon-pencil"></span></Link>
-              {/* <span onClick={(e) => deleteEvent(e, event.id)} class="icon-trash-2"></span> */}
+
+                <Link to='edit'><span class="icon-pencil"></span></Link>
+              <span onClick={startDeleteHandler} class="icon-trash-2"></span>
             </div>
+            }
+
           </td>
         </tr>
-
       </tbody>
     </table>
+    // </div>
   );
 }
 

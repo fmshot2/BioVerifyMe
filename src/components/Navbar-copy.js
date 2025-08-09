@@ -2,66 +2,29 @@ import React, { useState, useEffect } from 'react';
 import AuthService from "../Services/Auth/auth.service";
 import { Link, Form, useNavigate, NavLink, useRouteLoaderData } from 'react-router-dom';
 import classes from './MainNavigation.module.css';
-import { Button } from './ui/button'; // Import the shadcn button
+
 
 function Navbar() {
 	const token = useRouteLoaderData('root');
-	const [isMobile, setIsMobile] = useState(false);
-	const [currentUser, setCurrentUser] = useState(undefined);
 
+	const [currentUser, setCurrentUser] = useState(undefined);
 	useEffect(() => {
 		const user = AuthService.getCurrentUser();
 		if (user) {
 			setCurrentUser(user);
 		}
-
-		// Check screen size for mobile detection
-		const checkScreenSize = () => {
-			setIsMobile(window.innerWidth < 768);
-		};
-
-		checkScreenSize();
-		window.addEventListener('resize', checkScreenSize);
-		return () => window.removeEventListener('resize', checkScreenSize);
 	}, []);
-
 	const logOut = () => {
 		AuthService.logout();
 	};
-
-	// Function to trigger mobile menu in sidebar
-	const handleMobileMenuToggle = () => {
-		const event = new CustomEvent('toggleMobileMenu');
-		window.dispatchEvent(event);
-	};
-
-	// Function to trigger desktop sidebar toggle
-	const handleDesktopSidebarToggle = () => {
-		const event = new CustomEvent('toggleDesktopSidebar');
-		window.dispatchEvent(event);
-	};
-
 	return (
 		<div>
 			<header className="header">
 				<div className="toggle-btns">
-					{/* Mobile Menu Button for smaller screens */}
-					{isMobile && (
-						<Button
-							variant="ghost"
-							size="icon"
-							onClick={handleMobileMenuToggle}
-							className="md:hidden mr-2 h-10 w-10 hover:bg-accent"
-						>
-							☰
-						</Button>
-					)}
-					
-					{/* Your existing toggle buttons for desktop - you can remove these if not needed */}
-					<a id="toggle-sidebar" href="#" className="hidden md:block" style={{ display: 'none' }}>
+					<a id="toggle-sidebar" href="#">
 						<i className="icon-menu"></i>
 					</a>
-					<a id="pin-sidebar" href="#" className="hidden md:block" style={{ display: 'none' }}>
+					<a id="pin-sidebar" href="#">
 						<i className="icon-menu"></i>
 					</a>
 				</div>
@@ -260,8 +223,33 @@ function Navbar() {
 								</div>
 							</div>
 						</li>
-
-						{/* Authentication Links */}
+						{/* {currentUser ? (
+							<div className="navbar-nav ml-auto">
+								<li className="nav-item">
+									<Link to={"/profile"} className="nav-link">
+										{currentUser.username}
+									</Link>
+								</li>
+								<li className="nav-item">
+									<a href="/login" className="nav-link" onClick={logOut}>
+										LogOut
+									</a>
+								</li>
+							</div>
+						) : (
+							<div className="navbar-nav ml-auto">
+								<li className="nav-item">
+									<Link to={"/login"} className="nav-link">
+										Login
+									</Link>
+								</li>
+								<li className="nav-item">
+									<Link to={"/register"} className="nav-link">
+										Sign Up
+									</Link>
+								</li>
+							</div>
+						)} */}
 						{!token && (
 							<div className="navbar-nav ml-auto">
 								<li className="nav-item">
@@ -290,6 +278,7 @@ function Navbar() {
 				</div>
 			</header>
 		</div>
+
 	)
 }
 export default Navbar

@@ -1,61 +1,35 @@
-import React  from 'react';
+import { Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import EventsDataService from "../Services/EventsService";
-import Button from '../ReUsables/Button'
-import swal from 'sweetalert';
 import AuthService from "../Services/Auth/auth.service";
-import { useLoaderData, json } from 'react-router-dom';
-import EventsList from '../Components/EventsList';
-
-
+import { useLoaderData, useRouteLoaderData, json, defer, Await } from 'react-router-dom';
+import EventsList from '../components/EventsList';
 
 function Events() {
-    const events = useLoaderData();
+    const { events } = useLoaderData();
+    const token = useRouteLoaderData('root');
+
     return (
-        <div>
-            <div className="row">
-                <Link to={'/addevent'} className="btn btn-primary btn-sm float-end"> Add  EVENTS</Link>
-            </div>
-            <EventsList events={events} />;
-        </div>
-    )
+        <Suspense fallback={<p style={{ textAlign: 'center' }}>Loading Events...</p>}>
+            <Await resolve={events}>
+                {(loadedEvents) => <div>
+                    {token &&
+                    <div className="row">
+                        <Link to={'addevent'} className="btn btn-primary btn-sm float-end"> Add  Events</Link>
+                    </div>
+                }
+                    <EventsList events={loadedEvents} />
+                </div>
+                }
+            </Await>
+        </Suspense>
+    );
 }
 
-// const deleteEvent = (e, id) => {
-//     e.preventDefault();
-//     swal({
-//         title: "Are you sure?",
-//         text: "Once deleted, you will not be able to recover this imaginary file!",
-//         icon: "warning",
-//         buttons: true,
-//         dangerMode: true,
-//     })
-//         .then((willDelete) => {
-//             if (willDelete) {
-//                 EventsDataService.remove(id)
-//                     .then(response => {
-//                         console.log("delete", response.data);
-//                         swal("Poof! Your imaginary file has been deleted!", {
-//                             icon: "success",
-//                         });
-//                         setEvents(events.filter((event) => event.id !== id))
-//                     });
-//             }
-//             else {
-//                 swal("Your imaginary file is safe!");
-//             }
-//         })
-// };
-
-
-// if (loading) {
-//     return <h4>Loading Events...</h4>
-// }
-// else
 
 export default Events;
 
-export async function loader() {
+async function loadEvents() {
     try {
         const response = await EventsDataService.getAll();
 
@@ -73,10 +47,17 @@ export async function loader() {
         // )
         // ;
 
-        //or user react's json function
+        //or use react's json function
         return json(
             { message: 'Could not fetch events.' },
             { status: 500 }
         )
     }
+}
+
+export function loader() {
+    // create an object from react's defer function
+    return defer({
+        events: loadEvents(),
+    });
 }

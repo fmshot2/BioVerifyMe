@@ -1,59 +1,88 @@
-import React, { useState, useEffect } from 'react';
-import AuthService from "../Services/Auth/auth.service";
-import EventItem from '../Components/EventItem';
-import { useLoaderData, json } from 'react-router-dom';
-import { useRouteLoaderData } from 'react-router-dom';
-
-
-
-
+import { Suspense } from 'react';
+import EventItem from '../components/EventItem';
+import { useRouteLoaderData, json, defer, Await, redirect } from 'react-router-dom';
 import EventDetailsDataService from "../Services/EventDetailsService";
-import { Routes, Route, Link, useParams, useNavigate } from "react-router-dom";
-
+import swal from 'sweetalert';
+import ItemsDataService from "../Services/ItemService";
+import EventsList from '../components/EventsList';
+import EventsDataService from "../Services/EventsService";
 
 function EventDetails() {
-  // const event = useLoaderData();
-  const event = useRouteLoaderData('event-detail');
-  console.log('eventeee', event);
-
-
-  // const [currenteventdetails, setCurrentEventDetails] = useState({});
-  const [message, setMessage] = useState("");
+  const { event, events } = useRouteLoaderData('event-detail');
+  console.log('single event use loader', events);
+  console.log('events use loader', events);
 
   return (
-
-    <div className="table-responsive scrollbar">
-      {event ? (
-        <EventItem event={event} />
-      ) : (
-        <div>
-          <br />
-          <p>Loading DETAILS Content...</p>
-        </div>
-      )}
-    </div>
-
+    <>
+      <Suspense fallback={<p style={{ textAlign: 'center' }}>Loading...</p>}>
+        <Await resolve={event}>
+          {(loadedEvent) => <EventItem event={loadedEvent} />}
+        </Await>
+      </Suspense>
+      <Suspense fallback={<p style={{ textAlign: 'center' }}>Loading...</p>}>
+        <Await resolve={events}>
+          {(loadedEvents) => <EventsList events={loadedEvents} />}
+        </Await>
+      </Suspense>
+    </>
   );
 }
 export default EventDetails;
 
+export async function loadEvent(id) {
+  try {
+    const response = await EventDetailsDataService.get(id);
+    const resData = process.env.REACT_APP_API_SOURCE === 'laravel'
+      ? await response.data
+      : await response.data.data;
+    return resData;
+  } catch (error) {
+    return json(
+      { message: 'Could not fetch eventdetails.' },
+      { status: 500 }
+    )
+  }
+};
+
+async function loadEvents() {
+  try {
+    const response = await EventsDataService.getAll();
+
+    const resData = process.env.REACT_APP_API_SOURCE === 'laravel'
+      ? await response.data
+      : await response.data.data;
+    return resData;
+  } catch (error) {
+    return json(
+      { message: 'Could not fetch events.' },
+      { status: 500 }
+    )
+  }
+}
+
 export async function loader({ request, params }) {
-    try {
-      const id = params.id;    
+  const id = params.id;
 
-      const response = await EventDetailsDataService.get(id);
-      console.log('idd2', id);
+  return defer({
+    event: await loadEvent(id),
+    events: loadEvents(),
+  });
+};
 
-      const resData = process.env.REACT_APP_API_SOURCE === 'laravel'
-        ? await response.data
-        : await response.data.data;
-      return resData;
+export async function action({ params, request }) {
+  try {
+    const id = params.id;
 
-    } catch (error) {
-      //or user react's json function
-      return json(
-        { message: 'Could not fetch eventdetails.' },
-        { status: 500 }
-      )
-    }
-  };
+    const response = await ItemsDataService.remove(id)
+    swal("Poof! Your imaginary file has been deleted!", {
+      icon: "success",
+    });
+    return redirect('/events');
+
+  } catch (error) {
+    return json(
+      { message: 'Could not fetch eventdetails.' },
+      { status: 500 }
+    )
+  }
+};

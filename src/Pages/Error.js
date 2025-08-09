@@ -1,8 +1,8 @@
 import { useRouteError } from 'react-router-dom';
-import Sidebar from '../Components/Sidebar/Sidebar'
-import Navbar from '../Components/Navbar'
+import Sidebar from '../components/Sidebar/Sidebar'
+import Navbar from '../components/Navbar'
 
-import PageContent from '../Components/PageContent';
+import PageContent from '../components/PageContent';
 
 function ErrorPage() {
   const error = useRouteError();

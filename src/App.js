@@ -29,7 +29,11 @@ import EditUpcoming from './Pages/EditUpcoming'
 import EditPrevious from './Pages/EditPrevious'
 import Events, { loader as eventsLoader } from './Pages/Events';
 import Array from './Pages/array'
-import EventDetails, { loader as eventDetailLoader } from './Pages/EventDetails'
+import EventDetails,
+{
+  loader as eventDetailLoader,
+  action as deleteEventAction,
+} from './Pages/EventDetails'
 import EditEvent from './Pages/EditEvents'
 import EditUser from './Pages/EditUser'
 import EditServices from './Pages/EditServices'
@@ -51,21 +55,34 @@ import Login from './Pages/AuthPages/Login';
 import Profile from './Pages/AuthPages/Profile';
 import Register from './Pages/AuthPages/Register';
 import Users from './Pages/Users'
-
-import EventsDataService from './Services/EventsService'
-
-
-
+import AuthenticationPage, { action as authAction } from './Pages/Authentication';
+import { action as logoutAction } from './Pages/Logout';
+import { action as manipulateEventAction } from './components/EventForm';
+import {checkAuthLoader, tokenLoader } from './Utils/auth';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <RootLayout />,
     errorElement: <ErrorPage />,
+    id: 'root',
+    loader: tokenLoader,
     children: [
       { index: true, element: <Home /> },
       { path: '/', element: <Home /> },
       { path: 'about', element: <About /> },
+      {
+        path: 'auth',
+        element: <AuthenticationPage />,
+        action: authAction
+      },
+      { path: 'login', element: <Login /> },
+      { path: 'register', element: <Register /> },
+      { path: 'profile', element: <Profile /> },
+      {
+        path: 'logout',
+        action: logoutAction,
+      },
       {
         path: 'events',
         // element: <RootLayout />,
@@ -82,11 +99,18 @@ const router = createBrowserRouter([
               {
                 index: true,
                 element: <EventDetails />,
+                action: deleteEventAction,
               },
-              { path: 'edit', element: <EditEvent /> },
+              { path: 'edit', 
+                element: <EditEvent />, 
+                action: manipulateEventAction,
+                loader: checkAuthLoader, },
             ],
           },
-          { path: "addevent", element: <AddEvent /> },
+          { path: "addevent", 
+            element: <AddEvent />, 
+            action: manipulateEventAction,
+            loader: checkAuthLoader, },
 
         ],
       },

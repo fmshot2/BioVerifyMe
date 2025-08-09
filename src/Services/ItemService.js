@@ -21,7 +21,7 @@ const update = (id, data) => {
 };
 
 const remove = id => {
-  return http.delete(`/item/${id}`);
+  return http.delete(`/events/${id}`);
 };
 
 const removeAll = () => {

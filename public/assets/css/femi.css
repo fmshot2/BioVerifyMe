@@ -1,0 +1,20 @@
+/* Add this CSS to your global styles or a separate CSS file */
+
+/* Dynamic page content margin based on sidebar width */
+@media (min-width: 768px) {
+  .page-content {
+    margin-left: 256px; /* Default expanded sidebar width */
+    transition: margin-left 0.3s ease-in-out;
+  }
+  
+  /* When sidebar is collapsed to 64px width */
+  body.sidebar-collapsed .page-content {
+    margin-left: 64px;
+  }
+}
+
+@media (max-width: 767px) {
+  .page-content {
+    margin-left: 0 !important;
+  }
+}

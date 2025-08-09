@@ -1,8 +1,8 @@
 import "./App.css";
 
-import Sidebar from './Components/Sidebar'
-import Navbar from './Components/Navbar'
-import TopCards from './Components/TopCards'
+import Sidebar from './components/Sidebar'
+import Navbar from './components/Navbar'
+import TopCards from './components/TopCards'
 import {BrowserRouter as Router,  Routes, Route } from 'react-router-dom';
 import Users from './Pages/Users'
 import About from './Pages/About' 
