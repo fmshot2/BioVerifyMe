@@ -1,265 +1,180 @@
-import React, {useState, useEffect} from 'react';
-import axios from 'axios';
-import {Link, useNavigate} from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Link, useNavigate } from "react-router-dom";
 import ConfigDataService from "../Services/ConfigService";
-import Button from '../ReUsables/Button'
 import AuthService from "../Services/Auth/auth.service";
 
-
-
+const configSchema = z.object({
+  email_1: z.string().email("Invalid email").optional(),
+  email_2: z.string().email("Invalid email").optional(),
+  email_3: z.string().email("Invalid email").optional(),
+  phone_1: z.string().min(1, "Phone is required"),
+  phone_2: z.string().optional(),
+  phone_3: z.string().optional(),
+  address: z.string().optional(),
+  twitter: z.string().url("Invalid Twitter URL"),
+  linkedin: z.string().url("Invalid LinkedIn URL").optional(),
+  instagram: z.string().url("Invalid Instagram URL").optional(),
+  facebook: z.string().url("Invalid Facebook URL").optional(),
+  youtube: z.string().url("Invalid YouTube URL").optional(),
+});
 
 function Config() {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState("");
+  const [configId, setConfigId] = useState(null);
 
-// const initialConfigState = {
-//   id: null,
-//   title: "",
-//   details: "",
-//   phone_1: "",
-//   phone_2: "",
-//   phone_3: "",
-//   email_1: "",
-//   email_2: "",
-//   email_3: "",
-//   address: "",
-//   facebook: "",
-//   linkedin: "",
-//   twitter: "",
-//   youtube: "",
-//   instagram: ""
-// };
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(configSchema),
+  });
 
-const [loading, setLoading] = useState(true);
-const [config, setConfig] = useState({});
-const [message, setMessage] = useState("");
+  useEffect(() => {
+    const user = AuthService.getCurrentUser();
 
-useEffect(() => {
-  const user = AuthService.getCurrentUser();
-
-  if (!user) {
+    if (!user) {
       retrieveConfig();
-  } else {
+    } else {
       navigate("/login");
+    }
+  }, [navigate]);
 
-  }
-
-}, []);
-
-
-    const retrieveConfig = () => {
-    ConfigDataService.getAll()
-      .then(response => {
-       console.log("config", response);
-        setConfig(response.data.data[0]);
-        setLoading(false);
-
-        // console.log("configg", response.data);
-      })
-      .catch(e => {
-        console.log(e);
-      });
+  const retrieveConfig = async () => {
+    try {
+      const response = await ConfigDataService.getAll();
+      const configData = response.data.data[0];
+      if (configData) {
+        setConfigId(configData.id || configData._id);
+        reset(configData);
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const handleInputChange = event => {
-    const { name, value } = event.target;
-    setConfig({ ...config, [name]: value });
+  const updateConfig = async (data) => {
+    if (!configId) return;
+
+    try {
+      const response = await ConfigDataService.update(configId, data);
+      setMessage("Config Status was updated successfully!!");
+      console.log("Updated config:", response.data);
+    } catch (error) {
+      console.error(error);
+      setMessage("Failed to update config.");
+    }
   };
 
-  const updateConfig = (e) => {
-    e.preventDefault();
-    ConfigDataService.update(config.id ? config.id : config._id, config)
-      .then(response => {
-        console.log( "config", response.data);
-        setMessage(" Config Status was updated successfully!!");
-        console.log( "configs", message);
+  if (loading) return <h4 className="text-center">Loading Config Page....</h4>;
 
-      })
-      .catch(e => {
-        console.log(e);
-      });
-      
- };
+  return (
+    <div className="container max-w-5xl mx-auto p-4">
+      {configId ? (
+        <form onSubmit={handleSubmit(updateConfig)} noValidate>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* EMAILS */}
+            {["email_1", "email_2", "email_3"].map((field) => (
+              <div key={field} className="">
+                <label className="label" htmlFor={field}>
+                  <span className="label-text">{field.toUpperCase().replace("_", " ")}</span>
+                </label>
+                <input
+                  type="email"
+                  id={field}
+                  {...register(field)}
+                  className={`input input-bordered form-control ${errors[field] ?  "border-red-600 ring-1 ring-red-600" : "border-gray-300"}`}
+                  placeholder="Enter email"
+                />
+                {errors[field] && (
+                  <p className="text-error mt-1 text-sm">{errors[field]?.message}</p>
+                )}
+              </div>
+            ))}
 
-//  const deleteConfig = (e, id) => {
-//   e.preventDefault();
-//     ConfigDataService.remove(config.id ? config.id : config._id)
-//       .then(response => {
-//         console.log(response.data);
-//         setMessage(" Config Status was deleted successfully!");
-//         navigate("/addconfig");
-//         // props.history.push("/tutorials");
-//       })
-//       .catch(e => {
+            {/* PHONES */}
+            {["phone_1", "phone_2", "phone_3"].map((field) => (
+              <div key={field}>
+                <label className="label" htmlFor={field}>
+                  <span className="label-text">{field.toUpperCase().replace("_", " ")}</span>
+                </label>
+                <input
+                  type="tel"
+                  id={field}
+                  {...register(field)}
+                  className={`input input-bordered form-control ${errors[field] ?  "border-red-600 ring-1 ring-red-600" : "border-gray-300"}`}
+                  placeholder="Enter phone"
+                />
+                {errors[field] && (
+                  <p className="text-error mt-1 text-sm">{errors[field]?.message}</p>
+                )}
+              </div>
+            ))}
 
-//         console.log(e);
-//       });
-//   };
+            {/* SOCIAL LINKS */}
+            {["twitter", "linkedin", "instagram", "facebook", "youtube"].map((field) => (
+              <div key={field} className="">
+                <label className="label" htmlFor={field}>
+                  <span className="label-text">{field.toUpperCase()}</span>
+                </label>
+                <input
+                  type="text"
+                  id={field}
+                  {...register(field)}
+                  // className="input input-bordered form-control"
+                  className={`input input-bordered form-control ${errors[field] ?  "border-red-600 ring-1 ring-red-600" : "border-gray-300"}`}
+                  placeholder={`Enter ${field}`}
+                />
+              </div>
+            ))}
 
-  
+            
+            {/* ADDRESS */}
+            <div className="md:col-span-3">
+              <label className="label" htmlFor="address">
+                <span className="label-text">ADDRESS</span>
+              </label>
+              <input
+                type="text"
+                id="address"
+                {...register("address")}
+                className="input input-bordered form-control"
+                placeholder="Enter address"
+              />
+            </div>
+          </div>
 
-  if (loading) {
-    return <h4 className="text-center">Loading Config Page....
-     </h4>
-}
-else
-
-return (
-
-<div className="container">
-
-{config ? (
-
-      <div className="card">
-        <div className="card-body">
-        <form onSubmit={updateConfig} >
-
-          <div className="row gutters">
-
-              <div className="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
-                <div className="form-group">
-                  <label htmlFor="inputTitle">EMAIL 1</label>
-                  <input type="email" className="form-control" id="inputemail"
-                    placeholder="Enter email"
-                     name="email_1" onChange={handleInputChange}
-                    value={config.email_1}>
-                    </input>
-                </div>
-              </div>
-              <div className="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
-                <div className="form-group">
-                  <label htmlFor="inputTitle">EMAIL 2</label>
-                  <input type="email" className="form-control" id="inputEmail"
-                    placeholder="Enter email" 
-                    name="email_2" onChange={handleInputChange}
-                    value={config.email_2}></input>
-                </div>
-              </div>
-              <div className="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
-                <div className="form-group">
-                  <label htmlFor="inputTitle">EMAIL 2</label>
-                  <input type="email" className="form-control" id="inputEmail"
-                    placeholder="Enter email" 
-                    name="email_3" onChange={handleInputChange}
-                    value={config.email_3}></input>
-                </div>
-              </div>
-              <div className="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
-                <div className="form-group">
-                  <label htmlFor="inputTitle">PHONE</label>
-                  <input type="phone" className="form-control" id="inputPhone"
-                    placeholder="Enter phone" 
-                    name="phone_1" onChange={handleInputChange}
-                    value={config.phone_1}></input>
-                </div>
-              </div>
-              <div className="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
-                <div className="form-group">
-                  <label htmlFor="inputTitle">PHONE</label>
-                  <input type="phone" className="form-control" id="inputPhone"
-                    placeholder="Enter phone" 
-                    name="phone_2" onChange={handleInputChange}
-                    value={config.phone_2}></input>
-                </div>
-              </div>
-              <div className="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
-                <div className="form-group">
-                  <label htmlFor="inputTitle">PHONE</label>
-                  <input type="phone" className="form-control" id="inputPhone"
-                    placeholder="Enter phone" 
-                    name="phone_3" onChange={handleInputChange}
-                    value={config.phone_3}></input>
-                </div>
-              </div>
-              <div className="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
-                <div className="form-group">
-                  <label htmlFor="inputTitle">ADDRESS</label>
-                  <input type="address" className="form-control" id="inputAddress"
-                    placeholder="Enter address" 
-                    name="address" onChange={handleInputChange}
-                    value={config.address}></input>
-                </div>
-              </div>
-              <div className="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
-                <div className="form-group">
-                  <label htmlFor="inputDetails">TWITTER</label>
-                  <input type="text" className="form-control" id="inputDetails"
-                    placeholder="Enter Details"
-                      name="twitter" onChange={handleInputChange}
-                    value={config.twitter}>
-                    </input>
-                </div>
-              </div>
-              <div className="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
-                <div className="form-group">
-                  <label htmlFor="inputTitle">LINKEDIN</label>
-                  <input type="text" className="form-control" id="inputText"
-                    placeholder="Enter text" 
-                    name="linkedin" onChange={handleInputChange}
-                    value={config.linkedin}></input>
-                </div>
-              </div>
-              <div className="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
-                <div className="form-group">
-                  <label htmlFor="inputTitle">INSTAGRAM</label>
-                  <input type="text" className="form-control" id="inputText"
-                    placeholder="Enter text" 
-                    name="instagram" onChange={handleInputChange}
-                    value={config.instagram}></input>
-                </div>
-              </div>
-              <div className="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
-                <div className="form-group">
-                  <label htmlFor="inputTitle">FACEBOOK</label>
-                  <input type="text" className="form-control" id="inputText"
-                    placeholder="Enter text" 
-                    name="facebook" onChange={handleInputChange}
-                    value={config.facebook}></input>
-                </div>
-              </div>
-              <div className="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
-                <div className="form-group">
-                  <label htmlFor="inputTitle">YOUTUBE</label>
-                  <input type="text" className="form-control" id="inputText"
-                    placeholder="Enter text" 
-                    name="youtube" onChange={handleInputChange}
-                    value={config.youtube}></input>
-                </div>
-              </div>
-              </div>
-              </form>
-              <div className="d-flex justify-content-between">
-  <div>
-  <Button
-              size='btn-sm'
-              textcolor='white'
-              color='btn-primary'
-               text="Update Config"
-               onClick={updateConfig} />
-         <p>{message}</p>
-     </div>
-     <div>
-     {/* <Button
-              size='btn-sm'
-              textcolor='white'
-              color='btn-info'
-               text="Delete"
-               onClick={(e)=>deleteConfig(e, config.id ? config.id : config._id)} /> */}
-     </div>
-     </div>
-
-        </div>
-      </div>
-      
-) : (
-  <div>
+          <div className="mt-6 flex items-center justify-between">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="btn btn-primary btn-sm"
+            >
+              {isSubmitting ? "Updating..." : "Update Config"}
+            </button>
+            <p className="text-success">{message}</p>
+          </div>
+        </form>
+      ) : (
+        <div>
           <br />
-          <h2 className="text-center text-danger">No Config Details, please Add Config Details ...</h2>
-          <Link to={'/addconfig'} className="btn btn-warning btn-sm float-end">Add Config</Link>
+          <h2 className="text-center text-danger">
+            No Config Details, please Add Config Details ...
+          </h2>
+          <Link to={"/addconfig"} className="btn btn-warning btn-sm float-end">
+            Add Config
+          </Link>
         </div>
-)}
-
-</div>
-);
-
+      )}
+    </div>
+  );
 }
+
 export default Config;
